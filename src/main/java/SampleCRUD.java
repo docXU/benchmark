@@ -6,14 +6,13 @@ import org.apache.commons.dbcp.BasicDataSource;
 
 public class SampleCRUD {
     // 使用DBUtils的QueryRunner测试sql插入性能（内部使用PreparedStatement预处理）
-    // insert 50000 | 10000 BatchSize  用时 71553(ms)
-    // insert 50000 | 100 BatchSize  用时 70829(ms)
-    // insert 50000 | 1 BatchSize  用时 75155(ms)
-    // 批处理似乎无效
+    //insert 50000 | 10000 BatchSize  用时 785(ms)
+    //insert 50000 | 100 BatchSize  用时 1898(ms)
+    //insert 50000 | 1 BatchSize  用时 147176(ms)
     public static void main(String args[]) {
         BasicDataSource dataSource = new BasicDataSource();
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://127.0.0.1:3306/test_my?serverTimezone=UTC&useSSL=false");
+        dataSource.setUrl("jdbc:mysql://127.0.0.1:3306/test_my?serverTimezone=UTC&useSSL=false&rewriteBatchedStatements=true");
         dataSource.setUsername("someoneCool");
         dataSource.setPassword("123456");
         QueryRunner run = new QueryRunner(dataSource);
