@@ -5,14 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ibox.bigbang</groupId>
-    <artifactId>parent</artifactId>
-    <packaging>pom</packaging>
+    <artifactId>api-common</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <modules>
-        <module>api-common</module>
-        <module>business-side</module>
-        <module>shopper-side</module>
-        <module>consumer-do</module>
-    </modules>
+    <packaging>jar</packaging>
+
 
 </project>
