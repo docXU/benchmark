@@ -3,72 +3,94 @@ package provider.service;
 import bigbang.e.AbstractCoupon;
 import bigbang.e.AbstractShopper;
 import bigbang.i.IBusinessService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import provider.domain.Business;
+import provider.domain.Coupon;
 import provider.domain.Shopper;
-import provider.domain.VIP;
 import provider.repository.BusinessJpaRepository;
 
 import java.util.*;
-
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class BusinessServiceImpl implements IBusinessService<Business> {
+    private static Logger logger = Logger.getLogger(BusinessServiceImpl.class);
 
     @Autowired
     BusinessJpaRepository businessJpaRepository;
 
     @Override
     public Shopper addVIP(String bid, AbstractShopper shopper) {
+        Shopper instance = (Shopper) shopper;
         Business bus = businessJpaRepository.findById(Integer.parseInt(bid)).get();
-        bus.getShoppers().add((Shopper) shopper);
-        bus.setCreate_time(new Date());
+        instance.getBusinesses().add(bus);
+        bus.getShoppers().add(instance);
+        bus.setLast_update_time(System.currentTimeMillis());
         businessJpaRepository.save(bus);
-        return (Shopper) shopper;
+        return instance;
     }
 
     @Override
-    public Set<? extends AbstractShopper> queryAllVIP(String bid) {
-        Business business;
+    public Set<Shopper> queryAllVIP(String bid) {
         try {
-            business = businessJpaRepository.findById(Integer.parseInt(bid)).get();
+            Business business = businessJpaRepository.findById(Integer.parseInt(bid)).get();
+            return business.getShoppers();
         } catch (Exception e) {
             throw new NullPointerException("不存在商家");
         }
-        return business.getShoppers();
     }
 
     @Override
-    public VIP queryVIPDetail(String bid, String sid) {
-        Set<? extends AbstractShopper> shoppers = queryAllVIP(bid);
-        VIP vip;
+    public Shopper queryVIPDetail(String bid, String sid) {
+        Set<Shopper> shoppers = queryAllVIP(bid);
+        Shopper vip;
         try {
-            vip = (VIP) shoppers.stream().filter(shopper -> Integer.parseInt(sid) == ((Shopper) shopper).getSid()).findFirst().get();
+            vip = (Shopper) shoppers.stream()
+                    .filter(shopper -> Integer.parseInt(sid) == ((Shopper) shopper).getSid())
+                    .findFirst()
+                    .get();
             //TODO:优惠券查询
-            vip.setCoupons(null);
+            vip.setCoupons(new HashSet<>(0));
             return vip;
         } catch (Exception e) {
-            throw new NullPointerException("不存的顾客id");
+            throw new NullPointerException("不存在的顾客");
         }
     }
 
     @Override
     public String deleteVIP(String bid, String sid) {
-        return null;
+        Business business = qurey(bid);
+        try {
+            Set<Shopper> vips = business.getShoppers();
+            business.setShoppers(vips.stream()
+                    .filter(shopper -> Integer.parseInt(sid) != ((Shopper) shopper).getSid())
+                    .collect(Collectors.toSet()));
+        } catch (Exception e) {
+            throw new NullPointerException("取消失败");
+        }
+        return "取消成功";
     }
 
     @Override
-    public AbstractCoupon createCoupon(AbstractCoupon params) {
-        return null;
+    public Coupon createCoupon(AbstractCoupon coupon) {
+        Coupon prepareAdd = (Coupon) coupon;
+        Business business = businessJpaRepository.getOne(prepareAdd.getBid());
+        Set<Coupon> oldCouponSet = business.getCoupons();
+        oldCouponSet.add(prepareAdd);
+        business.setCoupons(oldCouponSet);
+        businessJpaRepository.save(business);
+        return (Coupon) coupon;
     }
 
     @Override
     public String deliverCoupon(String bid, String sid) {
-        return null;
+        String result = "deliver coupon fail";
+        return result;
     }
 
     @Override
@@ -78,13 +100,20 @@ public class BusinessServiceImpl implements IBusinessService<Business> {
 
     @Override
     public Business create(Business obj) {
+        Business business = null;
         if (0 == obj.getBid()) {
-            if (businessJpaRepository.getBusinessMaxId() == Integer.MAX_VALUE)
+            int currentMaxID = businessJpaRepository.getBusinessMaxId();
+            if (currentMaxID == Integer.MAX_VALUE)
                 throw new RuntimeException("id值已经用完！");
-            obj.setBid(getBusinessMaxId() + 1);
+            obj.setBid(++currentMaxID);
         }
-        businessJpaRepository.save(obj);
-        return obj;
+        try {
+            business = businessJpaRepository.save(obj);
+        } catch (Exception e) {
+            logger.error(e.getStackTrace());
+            e.printStackTrace();
+        }
+        return business;
     }
 
     //@Cacheable(value = "query_cache")
@@ -100,13 +129,12 @@ public class BusinessServiceImpl implements IBusinessService<Business> {
     @Override
     public Business update(Business obj) {
         // 覆盖更新
-        businessJpaRepository.save(obj);
-        return businessJpaRepository.getOne(obj.getBid());
+        obj.setLast_update_time(System.currentTimeMillis());
+        return businessJpaRepository.save(obj);
     }
 
     @Override
     public String delete(String id) {
-        businessJpaRepository.deleteById(Integer.parseInt(id));
-        return "success";
+        return null;
     }
 }

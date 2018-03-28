@@ -20,5 +20,4 @@ public interface IBusinessService<B> extends ICRUDService<B> {
     String deliverCoupon(String bid, String sid);
 
     int getBusinessMaxId();
-
 }

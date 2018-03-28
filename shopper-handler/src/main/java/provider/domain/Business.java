@@ -1,45 +1,54 @@
 package provider.domain;
 
-
-import bigbang.e.AbstractBusiness;
-
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
  * Created by Matt Xu on 2018/3/22
  */
-public class Business extends AbstractBusiness implements Serializable {
+
+@Entity
+@Table(name = "business")
+public class Business extends bigbang.e.AbstractBusiness implements Serializable {
+    @Id
+    @Column(name = "bid")
     private int bid;
 
+    @Column
     private String shop_name;
-    private String address;
-    private String telephone;
-    private int type;
-    private String password;
-    private Date create_time;
-    private long last_update_time;
-    private int city_code;
-    private Set<Shopper> shoppers;
-    private Set<Coupon> coupons;
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Business:[bid= ").append(this.getBid())
-                .append(", shop_name=").append(this.getShop_name())
-                .append(", create_time=").append(this.getCreate_time())
-                .append(", coupons=[").append(this.getCoupons()).append("]")
-                .append(", Shoppers:[");
-        for (Shopper s :
-                shoppers) {
-            sb.append("Shopper:[sid= ").append(s.getSid())
-                    .append(", nickname=").append(s.getNickname()).append("],");
-        }
-        sb.append("]");
-        return sb.toString();
-    }
+    @Column
+    private String address;
+
+    @Column
+    private String telephone;
+
+    @Column
+    private int type;
+
+    @Column
+    private String password;
+
+    @Column
+    private Date create_time;
+
+    @Column
+    private long last_update_time;
+
+    @Column
+    private int city_code;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "contact_bus_sho", joinColumns = {
+            @JoinColumn(name = "bid", referencedColumnName = "bid")}, inverseJoinColumns = {
+            @JoinColumn(name = "sid", referencedColumnName = "sid")})
+    private Set<Shopper> shoppers = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "business", cascade = CascadeType.REFRESH)
+    private Set<Coupon> coupons = new HashSet<>();
 
     public Set<Coupon> getCoupons() {
         return coupons;
@@ -105,14 +114,6 @@ public class Business extends AbstractBusiness implements Serializable {
         this.password = password;
     }
 
-    public Date getCreate_time() {
-        return create_time;
-    }
-
-    public void setCreate_time(Date create_time) {
-        this.create_time = create_time;
-    }
-
     public long getLast_update_time() {
         return last_update_time;
     }
@@ -127,5 +128,13 @@ public class Business extends AbstractBusiness implements Serializable {
 
     public void setCity_code(int city_code) {
         this.city_code = city_code;
+    }
+
+    public Date getCreate_time() {
+        return create_time;
+    }
+
+    public void setCreate_time(Date create_time) {
+        this.create_time = create_time;
     }
 }

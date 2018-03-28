@@ -1,7 +1,5 @@
 package bigbang.i;
 
-import java.util.Map;
-
 public interface ICRUDService<T> {
     T create(T obj);
 

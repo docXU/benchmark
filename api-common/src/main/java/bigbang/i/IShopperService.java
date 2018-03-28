@@ -1,5 +1,5 @@
 package bigbang.i;
 
-public interface IShopperService extends ICRUDService {
+public interface IShopperService<S> extends ICRUDService<S> {
 
 }

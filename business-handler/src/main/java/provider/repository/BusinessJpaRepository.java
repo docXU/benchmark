@@ -18,8 +18,6 @@ public interface BusinessJpaRepository extends JpaRepository<Business, Integer> 
     // findBy*** 格式 Jpa内部自动实现查询，直接使用即可
     Business findByTelephone(String telephone);
 
-    Set<Shopper> findByBidContaining(@Param("bid") int bid);
-
     @Query(" select max(id) from #{#entityName} ")
     int getBusinessMaxId();
 }

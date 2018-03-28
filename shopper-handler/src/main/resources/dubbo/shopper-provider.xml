@@ -7,13 +7,14 @@
        http://code.alibabatech.com/schema/dubbo
        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
     <!--定义了提供方应用信息，用于计算依赖关系；在 dubbo-admin 或 dubbo-monitor 会显示这个名字，方便辨识-->
-    <dubbo:application name="business-handler" owner="mattxu" organization="dubbox"/>
+    <dubbo:application name="shopper-handler" owner="mattxu" organization="dubbox"/>
     <!--使用 zookeeper 注册中心暴露服务，注意要先开启 zookeeper-->
     <dubbo:registry address="zookeeper://localhost:2181"/>
     <!-- 用dubbo协议在20880端口暴露服务 -->
-    <dubbo:protocol host="localhost" name="dubbo" port="20880"/>
+    <dubbo:protocol host="localhost" name="dubbo" port="20881"/>
     <!--使用 dubbo 协议实现定义好的 api.PermissionService 接口-->
-    <dubbo:service interface="bigbang.i.IBusinessService" ref="businessImplService" protocol="dubbo" retries="0" timeout="6000" version="1.0.0"/>
+    <dubbo:service interface="bigbang.i.IShopperService" ref="shopperServiceImpl" protocol="dubbo" retries="0"
+                   timeout="6000" version="1.0.0"/>
     <!--具体实现该接口的 bean-->
-    <bean id="businessImplService" class="provider.service.BusinessServiceImpl"/>
+    <bean id="shopperServiceImpl" class="provider.service.ShopperServiceImpl"/>
 </beans>

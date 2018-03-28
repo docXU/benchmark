@@ -1,10 +1,9 @@
 package provider.domain;
 
-
 import javax.persistence.*;
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -42,11 +41,23 @@ public class Business extends bigbang.e.AbstractBusiness implements Serializable
     @Column
     private int city_code;
 
+    //TODO:取消试用内置的方式，后期自己完成级联逻辑避免性能消耗
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "contact_bus_sho", joinColumns = {
             @JoinColumn(name = "bid", referencedColumnName = "bid")}, inverseJoinColumns = {
             @JoinColumn(name = "sid", referencedColumnName = "sid")})
-    private Set<Shopper> shoppers;
+    private Set<Shopper> shoppers = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "business", cascade = CascadeType.REFRESH)
+    private Set<Coupon> coupons = new HashSet<>();
+
+    public Set<Coupon> getCoupons() {
+        return coupons;
+    }
+
+    public void setCoupons(Set<Coupon> coupons) {
+        this.coupons = coupons;
+    }
 
     public Set<Shopper> getShoppers() {
         return shoppers;

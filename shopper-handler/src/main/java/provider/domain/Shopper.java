@@ -1,8 +1,8 @@
 package provider.domain;
 
 import bigbang.e.AbstractShopper;
-import com.fasterxml.jackson.annotation.JsonView;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
 
@@ -10,43 +10,26 @@ import java.util.Set;
  * Created by Matt Xu on 2018/3/22
  */
 
+
+@Entity
+@Table(name = "shopper")
 public class Shopper extends AbstractShopper implements Serializable {
+    @Id
+    @Column(name = "sid")
     private int sid;
+    @Column
     private String nickname;
+    @Column
     private String telephone;
+    @Column
     private String email;
+    @Column
     private int sex;
+    @Column
     private String password;
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "shoppers")
     private Set<Business> businesses;
-    private Set<Coupon> coupons;
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Shopper:[sid= ").append(this.getSid())
-                .append(", nickname=").append(this.getNickname())
-                .append(",coupons=[").append(this.getCoupons()).append("]");
-
-        sb.append("business:[");
-        for (Business b :
-                businesses) {
-            sb.append("business[bid=").append(b.getBid()).append(", shop_name=").append(b.getShop_name()).append("],");
-        }
-        sb.append("]");
-
-        return sb.toString();
-    }
-
-    @JsonView(View.VIPView.class)
-    public Set<Coupon> getCoupons() {
-        return coupons;
-    }
-
-    public void setCoupons(Set<Coupon> coupons) {
-        this.coupons = coupons;
-    }
-
-    @JsonView(View.VIPView.class)
     public int getSid() {
         return sid;
     }
@@ -55,7 +38,6 @@ public class Shopper extends AbstractShopper implements Serializable {
         this.sid = sid;
     }
 
-    @JsonView(View.VIPView.class)
     public String getNickname() {
         return nickname;
     }
@@ -64,7 +46,6 @@ public class Shopper extends AbstractShopper implements Serializable {
         this.nickname = nickname;
     }
 
-    @JsonView(View.VIPView.class)
     public String getTelephone() {
         return telephone;
     }
@@ -73,7 +54,6 @@ public class Shopper extends AbstractShopper implements Serializable {
         this.telephone = telephone;
     }
 
-    @JsonView(View.VIPView.class)
     public String getEmail() {
         return email;
     }
@@ -82,7 +62,6 @@ public class Shopper extends AbstractShopper implements Serializable {
         this.email = email;
     }
 
-    @JsonView(View.VIPView.class)
     public int getSex() {
         return sex;
     }
@@ -91,7 +70,6 @@ public class Shopper extends AbstractShopper implements Serializable {
         this.sex = sex;
     }
 
-    @JsonView(View.VIPView.class)
     public String getPassword() {
         return password;
     }
@@ -100,7 +78,6 @@ public class Shopper extends AbstractShopper implements Serializable {
         this.password = password;
     }
 
-    @JsonView(View.ShopperDetailView.class)
     public Set<Business> getBusinesses() {
         return businesses;
     }
