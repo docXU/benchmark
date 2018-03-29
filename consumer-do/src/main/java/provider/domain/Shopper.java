@@ -37,7 +37,7 @@ public class Shopper extends AbstractShopper implements Serializable {
         return sb.toString();
     }
 
-    @JsonView(View.VIPView.class)
+    @JsonView(View.ShopperView.class)
     public Set<Coupon> getCoupons() {
         return coupons;
     }
@@ -46,7 +46,7 @@ public class Shopper extends AbstractShopper implements Serializable {
         this.coupons = coupons;
     }
 
-    @JsonView(View.VIPView.class)
+    @JsonView(View.ShopperView.class)
     public int getSid() {
         return sid;
     }
@@ -55,7 +55,7 @@ public class Shopper extends AbstractShopper implements Serializable {
         this.sid = sid;
     }
 
-    @JsonView(View.VIPView.class)
+    @JsonView(View.ShopperView.class)
     public String getNickname() {
         return nickname;
     }
@@ -64,7 +64,7 @@ public class Shopper extends AbstractShopper implements Serializable {
         this.nickname = nickname;
     }
 
-    @JsonView(View.VIPView.class)
+    @JsonView(View.ShopperView.class)
     public String getTelephone() {
         return telephone;
     }
@@ -73,7 +73,7 @@ public class Shopper extends AbstractShopper implements Serializable {
         this.telephone = telephone;
     }
 
-    @JsonView(View.VIPView.class)
+    @JsonView(View.ShopperView.class)
     public String getEmail() {
         return email;
     }
@@ -82,7 +82,7 @@ public class Shopper extends AbstractShopper implements Serializable {
         this.email = email;
     }
 
-    @JsonView(View.VIPView.class)
+    @JsonView(View.ShopperView.class)
     public int getSex() {
         return sex;
     }
@@ -91,7 +91,7 @@ public class Shopper extends AbstractShopper implements Serializable {
         this.sex = sex;
     }
 
-    @JsonView(View.VIPView.class)
+    @JsonView(View.ShopperView.class)
     public String getPassword() {
         return password;
     }
@@ -100,7 +100,6 @@ public class Shopper extends AbstractShopper implements Serializable {
         this.password = password;
     }
 
-    @JsonView(View.ShopperDetailView.class)
     public Set<Business> getBusinesses() {
         return businesses;
     }

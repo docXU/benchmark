@@ -42,7 +42,7 @@ public class Business extends bigbang.e.AbstractBusiness implements Serializable
     private int city_code;
 
     //TODO:取消试用内置的方式，后期自己完成级联逻辑避免性能消耗
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
     @JoinTable(name = "contact_bus_sho", joinColumns = {
             @JoinColumn(name = "bid", referencedColumnName = "bid")}, inverseJoinColumns = {
             @JoinColumn(name = "sid", referencedColumnName = "sid")})

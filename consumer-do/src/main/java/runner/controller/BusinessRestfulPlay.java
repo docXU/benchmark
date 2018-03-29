@@ -33,7 +33,7 @@ public class BusinessRestfulPlay {
 
     @RequestMapping(value = "/{bid}", method = RequestMethod.GET, consumes = "application/json")
     public String getBusiness(@PathVariable String bid) {
-        return ((Business) businessService.qurey(bid)).toString();
+        return ((Business) businessService.query(bid)).toString();
     }
 
     @RequestMapping(value = "/{bid}", method = RequestMethod.PUT, consumes = "application/json")
@@ -42,20 +42,25 @@ public class BusinessRestfulPlay {
     }
 
     @RequestMapping(value = "/{bid}/shoppers", method = RequestMethod.GET)
-    @JsonView(View.VIPView.class)
+    @JsonView(View.ShopperView.class)
     public Set queryVIP(@PathVariable String bid) {
         return businessService.queryAllVIP(bid);
     }
 
     @RequestMapping(value = "/{bid}/shoppers", method = RequestMethod.POST)
-    @JsonView(View.VIPView.class)
+    @JsonView(View.ShopperView.class)
     public Shopper addVIP(@PathVariable String bid, @RequestParam String sid) {
-        return (Shopper) businessService.addVIP(bid, (Shopper) shopperService.qurey(sid));
+        try {
+            return (Shopper) businessService.addVIP(bid, (Shopper) shopperService.query(sid));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @RequestMapping(value = "/{bid}/shoppers/{sid}", method = RequestMethod.GET)
-    @JsonView(View.VIPView.class)
-    public Shopper virifyVIP(@PathVariable String bid, @PathVariable String sid) {
+    @JsonView(View.ShopperView.class)
+    public Shopper verifyVIP(@PathVariable String bid, @PathVariable String sid) {
         return (Shopper) businessService.queryVIPDetail(bid, sid);
     }
 

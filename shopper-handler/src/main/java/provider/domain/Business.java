@@ -41,7 +41,7 @@ public class Business extends bigbang.e.AbstractBusiness implements Serializable
     @Column
     private int city_code;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
     @JoinTable(name = "contact_bus_sho", joinColumns = {
             @JoinColumn(name = "bid", referencedColumnName = "bid")}, inverseJoinColumns = {
             @JoinColumn(name = "sid", referencedColumnName = "sid")})

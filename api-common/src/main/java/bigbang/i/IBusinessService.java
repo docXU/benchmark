@@ -7,7 +7,7 @@ import java.util.Set;
 
 public interface IBusinessService<B> extends ICRUDService<B> {
 
-    AbstractShopper addVIP(String bid, AbstractShopper shopper);
+    AbstractShopper addVIP(String bid, AbstractShopper shopper) throws Exception;
 
     Set<? extends AbstractShopper> queryAllVIP(String bid);
 

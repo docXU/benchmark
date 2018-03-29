@@ -11,7 +11,6 @@ import java.util.Set;
  * Created by Matt Xu on 2018/3/22
  */
 
-
 @Entity
 @Table(name = "shopper")
 public class Shopper extends AbstractShopper implements Serializable, Cloneable {
@@ -29,7 +28,7 @@ public class Shopper extends AbstractShopper implements Serializable, Cloneable 
     @Column
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "shoppers")
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "shoppers", cascade = CascadeType.REFRESH)
     private Set<Business> businesses;
 
     //会员才有访问优惠券集的资格，通过implements VIPable可以使用;

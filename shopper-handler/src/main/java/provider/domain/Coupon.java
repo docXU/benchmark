@@ -14,7 +14,7 @@ public class Coupon extends AbstractCoupon {
     @Column(name = "cid")
     private int cid;
 
-    @Column
+    @Column(insertable = false, updatable = false)
     private int sid;
 
     //约束business的coupon，使得coupon的插入更新只能通过business类操作
@@ -30,6 +30,10 @@ public class Coupon extends AbstractCoupon {
     @ManyToOne(fetch = FetchType.EAGER, targetEntity = Business.class)
     @JoinColumn(name = "bid")
     private Business business;
+
+    @ManyToOne(fetch = FetchType.EAGER, targetEntity = Shopper.class)
+    @JoinColumn(name = "sid")
+    private Shopper shopper;
 
     public int getBid() {
         return bid;

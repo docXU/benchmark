@@ -6,13 +6,11 @@ package provider.domain;
 
 public class View {
 
-    //VIP json序列化视图用于隔离Business属性
-    public interface VIPView {
+    //Shopper json序列化视图用于隔离Business属性
+    public interface ShopperView {
     }
 
-    interface ShopperDetailView extends VIPView {
-    }
-
+    //Business 隔离Shopper属性避免循环
     public interface BusinessView {
     }
 }

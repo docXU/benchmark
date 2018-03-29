@@ -3,7 +3,7 @@ package bigbang.i;
 public interface ICRUDService<T> {
     T create(T obj);
 
-    T qurey(String id);
+    T query(String id);
 
     T update(T obj);
 

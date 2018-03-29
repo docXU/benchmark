@@ -25,10 +25,12 @@ public class BusinessServiceImpl implements IBusinessService<Business> {
     BusinessJpaRepository businessJpaRepository;
 
     @Override
-    public Shopper addVIP(String bid, AbstractShopper shopper) {
+    public Shopper addVIP(String bid, AbstractShopper shopper) throws Exception {
         Shopper instance = (Shopper) shopper;
         Business bus = businessJpaRepository.findById(Integer.parseInt(bid)).get();
-        instance.getBusinesses().add(bus);
+        if (!instance.getBusinesses().add(bus)) {
+            throw new Exception("用户已经是会员");
+        }
         bus.getShoppers().add(instance);
         bus.setLast_update_time(System.currentTimeMillis());
         businessJpaRepository.save(bus);
@@ -64,7 +66,7 @@ public class BusinessServiceImpl implements IBusinessService<Business> {
 
     @Override
     public String deleteVIP(String bid, String sid) {
-        Business business = qurey(bid);
+        Business business = query(bid);
         try {
             Set<Shopper> vips = business.getShoppers();
             business.setShoppers(vips.stream()
@@ -89,8 +91,7 @@ public class BusinessServiceImpl implements IBusinessService<Business> {
 
     @Override
     public String deliverCoupon(String bid, String sid) {
-        String result = "deliver coupon fail";
-        return result;
+        return "deliver coupon fail";
     }
 
     @Override
@@ -118,7 +119,7 @@ public class BusinessServiceImpl implements IBusinessService<Business> {
 
     //@Cacheable(value = "query_cache")
     @Override
-    public Business qurey(String id) {
+    public Business query(String id) {
         try {
             return businessJpaRepository.findById(Integer.parseInt(id)).get();
         } catch (Exception e) {

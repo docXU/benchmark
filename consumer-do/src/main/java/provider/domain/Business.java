@@ -2,6 +2,7 @@ package provider.domain;
 
 
 import bigbang.e.AbstractBusiness;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -57,6 +58,7 @@ public class Business extends AbstractBusiness implements Serializable {
         this.shoppers = shoppers;
     }
 
+    @JsonView(View.BusinessView.class)
     public String getShop_name() {
         return shop_name;
     }
@@ -65,6 +67,7 @@ public class Business extends AbstractBusiness implements Serializable {
         this.shop_name = shop_name;
     }
 
+    @JsonView(View.BusinessView.class)
     public String getTelephone() {
         return telephone;
     }
@@ -73,6 +76,7 @@ public class Business extends AbstractBusiness implements Serializable {
         this.telephone = telephone;
     }
 
+    @JsonView(View.BusinessView.class)
     public int getBid() {
         return bid;
     }
@@ -81,6 +85,7 @@ public class Business extends AbstractBusiness implements Serializable {
         this.bid = bid;
     }
 
+    @JsonView(View.BusinessView.class)
     public String getAddress() {
         return address;
     }
@@ -89,6 +94,7 @@ public class Business extends AbstractBusiness implements Serializable {
         this.address = address;
     }
 
+    @JsonView(View.BusinessView.class)
     public int getType() {
         return type;
     }
@@ -97,6 +103,7 @@ public class Business extends AbstractBusiness implements Serializable {
         this.type = type;
     }
 
+    @JsonView(View.BusinessView.class)
     public String getPassword() {
         return password;
     }
@@ -105,6 +112,7 @@ public class Business extends AbstractBusiness implements Serializable {
         this.password = password;
     }
 
+    @JsonView(View.BusinessView.class)
     public Date getCreate_time() {
         return create_time;
     }
@@ -121,6 +129,7 @@ public class Business extends AbstractBusiness implements Serializable {
         this.last_update_time = last_update_time;
     }
 
+    @JsonView(View.BusinessView.class)
     public int getCity_code() {
         return city_code;
     }
