@@ -1,8 +1,7 @@
 package provider.service;
 
-import bigbang.e.AbstractBusiness;
 import bigbang.e.AbstractOrder;
-import bigbang.i.IBusinessService;
+import bigbang.i.IOrderService;
 import bigbang.i.IShopperService;
 import org.springframework.beans.factory.annotation.Autowired;
 import provider.domain.Business;
@@ -11,8 +10,8 @@ import provider.domain.Shopper;
 import provider.repository.ShopperJpaRepository;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Created by Matt Xu on 2018/3/27
@@ -21,7 +20,41 @@ import java.util.stream.Collectors;
 public class ShopperServiceImpl implements IShopperService<Shopper> {
 
     @Autowired
-    ShopperJpaRepository shopperJpaRepository;
+    private ShopperJpaRepository shopperJpaRepository;
+
+    @Resource
+    private IOrderService orderService;
+
+    @Override
+    public Set<Business> queryBusinesses(String sid) {
+        return query(sid).getBusinesses();
+    }
+
+    @Override
+    public boolean verifyVIP(String sid, String bid) {
+        Shopper shopper = query(sid);
+        try {
+            return shopper.getBusinesses().stream().anyMatch(business -> business.getBid() == Integer.parseInt(bid));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public String placeOrder(AbstractOrder order) {
+        return orderService.placeOrder((Order) order);
+    }
+
+    @Override
+    public List<Order> getOrdersBySid(int sid) {
+        return orderService.getOrdersBySid(sid);
+    }
+
+    @Override
+    public List<Order> getOrdersBySidAndBid(int sid, int bid) {
+        return orderService.getOrdersBySidAndBid(sid, bid);
+    }
 
     @Override
     public Shopper create(Shopper obj) {
@@ -42,26 +75,5 @@ public class ShopperServiceImpl implements IShopperService<Shopper> {
     public String delete(String id) {
         shopperJpaRepository.deleteById(Integer.parseInt(id));
         return "done";
-    }
-
-    @Override
-    public Set<Business> queryBusinesses(String sid) {
-        return query(sid).getBusinesses();
-    }
-
-    @Override
-    public boolean verifyVIP(String sid, String bid) {
-        Shopper shopper = query(sid);
-        try {
-            return shopper.getBusinesses().stream().anyMatch(business -> business.getBid() == Integer.parseInt(bid));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    @Override
-    public String placeOrder(AbstractOrder order) {
-        return null;
     }
 }

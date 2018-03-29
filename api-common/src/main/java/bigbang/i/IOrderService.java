@@ -2,8 +2,16 @@ package bigbang.i;
 
 import bigbang.e.AbstractOrder;
 
-public interface IOrderService extends ICRUDService {
-    AbstractOrder queryBySid(String sid);
-    AbstractOrder queryByBid(String bid);
-    AbstractOrder queryBySidInBid(String sid, String bid);
+import java.util.List;
+
+public interface IOrderService<T> extends ICRUDService<T> {
+    List<? extends AbstractOrder> getOrdersBySid(int sid);
+
+    List<? extends AbstractOrder> getOrdersByBid(int bid);
+
+    List<? extends AbstractOrder> getOrdersBySidAndBid(int sid, int bid);
+
+    String placeOrder(AbstractOrder order);
+
+    int getStatus(int oid);
 }

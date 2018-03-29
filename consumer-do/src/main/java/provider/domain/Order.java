@@ -2,10 +2,6 @@ package provider.domain;
 
 import bigbang.e.AbstractOrder;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -13,37 +9,24 @@ import java.util.Date;
  * Created by Matt Xu on 2018/3/29
  */
 
-@Entity
-@Table(name = "tb_order")
 public class Order extends AbstractOrder implements Serializable {
-    @Id
     private int oid;
 
-    @Column
     private int sid;
 
-    @Column
     private int bid;
 
-    @Column
     private Date create_time;
 
-    @Column
     private int last_update_time;
 
-    @Column
     private float cost;
 
-    @Column
-    private int status;
-
-    @Column
     private int use_coupons;
 
     /**
      * 支持空值的Integer可以用来装载可空的数据库字段
      */
-    @Column
     private Integer cid;
 
     public int getOid() {
@@ -94,15 +77,7 @@ public class Order extends AbstractOrder implements Serializable {
         this.cost = cost;
     }
 
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
-    public int isUse_coupons() {
+    public int getUse_coupons() {
         return use_coupons;
     }
 

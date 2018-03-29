@@ -15,7 +15,7 @@ public class Order extends AbstractOrder implements Serializable {
     private int bid;
     private Date create_time;
     private int last_update_time;
-    private int cost;
+    private float cost;
     private boolean use_coupons;
-    private int cid;
+    private Integer cid;
 }

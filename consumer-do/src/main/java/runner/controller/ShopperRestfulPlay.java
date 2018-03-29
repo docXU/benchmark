@@ -5,10 +5,13 @@ import bigbang.i.IShopperService;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.web.bind.annotation.*;
 import provider.domain.Business;
+import provider.domain.Order;
 import provider.domain.Shopper;
 import provider.domain.View;
 
 import javax.annotation.Resource;
+import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -66,5 +69,41 @@ public class ShopperRestfulPlay {
             e.printStackTrace();
         }
         return "failure";
+    }
+
+    @RequestMapping(value = "/orders", method = RequestMethod.POST)
+    public String placeOrder(@RequestBody Order order) {
+        try {
+            //TODO: 疯转一个ID生成类，创建一个全局唯一ID
+            order.setOid(5);
+            order.setCreate_time(new Date(System.currentTimeMillis()));
+            order.setLast_update_time((int) System.currentTimeMillis());
+            order.setCid(null);
+            return shopperService.placeOrder(order);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "failure";
+    }
+
+    @RequestMapping(value = "/{sid}/orders", method = RequestMethod.GET)
+    public List<Order> getOrdersWithShopper(@PathVariable int sid) {
+        try {
+            return shopperService.getOrdersBySid(sid);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    @RequestMapping(value = "/{sid}/orders/businesses/{bid}", method = RequestMethod.GET)
+    public List<Order> getOrdersWithShopperInBusiness(@PathVariable int sid, @PathVariable int bid) {
+        try {
+            return shopperService.getOrdersBySidAndBid(sid, bid);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
