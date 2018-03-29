@@ -1,10 +1,12 @@
 package provider.service;
 
 import bigbang.e.AbstractBusiness;
+import bigbang.e.AbstractOrder;
 import bigbang.i.IBusinessService;
 import bigbang.i.IShopperService;
 import org.springframework.beans.factory.annotation.Autowired;
 import provider.domain.Business;
+import provider.domain.Order;
 import provider.domain.Shopper;
 import provider.repository.ShopperJpaRepository;
 
@@ -56,5 +58,10 @@ public class ShopperServiceImpl implements IShopperService<Shopper> {
             e.printStackTrace();
             return false;
         }
+    }
+
+    @Override
+    public String placeOrder(AbstractOrder order) {
+        return null;
     }
 }

@@ -2,16 +2,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <artifactId>handler-shopper</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>ibox.bigbang</groupId>
-    <artifactId>parent</artifactId>
-    <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
-    <modules>
-        <module>api-common</module>
-        <module>handler-common</module>
-        <module>consumer-do</module>
-    </modules>
+    <parent>
+        <groupId>ibox.bigbang</groupId>
+        <artifactId>handler-common</artifactId>
+        <version>1.0.0.RELEASE</version>
+    </parent>
 
 </project>
