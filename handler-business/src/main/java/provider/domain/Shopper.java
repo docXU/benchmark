@@ -31,18 +31,12 @@ public class Shopper extends AbstractShopper implements Serializable, Cloneable 
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "shoppers", cascade = CascadeType.REFRESH)
     private Set<Business> businesses;
 
-    //会员才有访问优惠券集的资格，通过implements VIPable可以使用;
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "shopper")
-    private Set<Coupon> coupons;
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Shopper:[sid= ").append(this.getSid())
-                .append(", nickname=").append(this.getNickname())
-                .append(",coupons=[").append(this.getCoupons()).append("]");
-
-        sb.append("business:[");
+                .append(", nickname=").append(this.getNickname());
+        sb.append(", business:[");
         for (Business b :
                 businesses) {
             sb.append("business[bid=").append(b.getBid()).append(", shop_name=").append(b.getShop_name()).append("],");
@@ -119,11 +113,4 @@ public class Shopper extends AbstractShopper implements Serializable, Cloneable 
         this.businesses = businesses;
     }
 
-    public Set<? extends AbstractCoupon> getCoupons() {
-        return this.coupons;
-    }
-
-    public void setCoupons(Set<? extends AbstractCoupon> coupons) {
-        this.coupons = (Set<Coupon>) coupons;
-    }
 }

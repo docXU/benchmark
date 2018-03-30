@@ -18,23 +18,15 @@ public class Coupon extends AbstractCoupon implements Serializable {
     @Column
     private int sid;
 
-    //TODO:约束business的coupon，使得coupon的插入更新只能通过business类操作
+    //约束business的coupon，使得coupon的插入更新只能通过business类操作
     @Column
     private int bid;
 
-    /**
-     * 0代表是减额，1代表是打折
-     */
     @Column
     private int type;
 
     @Column
     private float discount;
-
-    @Override
-    public String toString() {
-        return "this is a coupon!";
-    }
 
     public int getBid() {
         return bid;

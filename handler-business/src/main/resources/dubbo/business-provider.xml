@@ -17,4 +17,5 @@
                    timeout="6000" version="1.0.0"/>
     <!--具体实现该接口的 bean-->
     <bean id="businessServiceImpl" class="provider.service.BusinessServiceImpl"/>
+    <dubbo:reference id="orderServiceImpl" interface="bigbang.i.IOrderService" version="1.0.0"/>
 </beans>

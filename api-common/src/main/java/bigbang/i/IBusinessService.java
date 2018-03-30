@@ -3,6 +3,7 @@ package bigbang.i;
 import bigbang.e.AbstractCoupon;
 import bigbang.e.AbstractShopper;
 
+import java.util.List;
 import java.util.Set;
 
 public interface IBusinessService<B> extends ICRUDService<B> {
@@ -20,4 +21,6 @@ public interface IBusinessService<B> extends ICRUDService<B> {
     String deliverCoupon(String bid, String sid);
 
     int getBusinessMaxId();
+
+    List<? extends AbstractCoupon> getMyCoupons(int bid);
 }

@@ -17,11 +17,7 @@ public class Coupon extends AbstractCoupon implements Serializable {
 
     private int type;
 
-    private float discout;
-
-    private Business business;
-
-    private Shopper shopper;
+    private float discount;
 
     @Override
     public String toString() {
@@ -60,29 +56,12 @@ public class Coupon extends AbstractCoupon implements Serializable {
         this.type = type;
     }
 
-    public float getDiscout() {
-        return discout;
+    public float getDiscount() {
+        return discount;
     }
 
-    public void setDiscout(float discout) {
-        this.discout = discout;
+    public void setDiscount(float discount) {
+        this.discount = discount;
     }
-
-    public Business getBusiness() {
-        return business;
-    }
-
-    public void setBusiness(Business business) {
-        this.business = business;
-    }
-
-    public Shopper getShopper() {
-        return shopper;
-    }
-
-    public void setShopper(Shopper shopper) {
-        this.shopper = shopper;
-    }
-
 
 }

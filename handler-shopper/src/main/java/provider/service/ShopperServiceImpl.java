@@ -1,10 +1,13 @@
 package provider.service;
 
+import bigbang.e.AbstractCoupon;
 import bigbang.e.AbstractOrder;
+import bigbang.i.ICouponSerivce;
 import bigbang.i.IOrderService;
 import bigbang.i.IShopperService;
 import org.springframework.beans.factory.annotation.Autowired;
 import provider.domain.Business;
+import provider.domain.Coupon;
 import provider.domain.Order;
 import provider.domain.Shopper;
 import provider.repository.ShopperJpaRepository;
@@ -47,12 +50,17 @@ public class ShopperServiceImpl implements IShopperService<Shopper> {
     }
 
     @Override
-    public List<Order> getOrdersBySid(int sid) {
+    public List<Coupon> getMyCoupons(int sid) {
+        return orderService.getCouponsBySid(sid);
+    }
+
+    @Override
+    public List<Order> getMyAllOrders(int sid) {
         return orderService.getOrdersBySid(sid);
     }
 
     @Override
-    public List<Order> getOrdersBySidAndBid(int sid, int bid) {
+    public List<Order> getMyOrdersWithBusiness(int sid, int bid) {
         return orderService.getOrdersBySidAndBid(sid, bid);
     }
 

@@ -4,10 +4,7 @@ import bigbang.i.IBusinessService;
 import bigbang.i.IShopperService;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.web.bind.annotation.*;
-import provider.domain.Business;
-import provider.domain.Order;
-import provider.domain.Shopper;
-import provider.domain.View;
+import provider.domain.*;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -89,18 +86,27 @@ public class ShopperRestfulPlay {
     @RequestMapping(value = "/{sid}/orders", method = RequestMethod.GET)
     public List<Order> getOrdersWithShopper(@PathVariable int sid) {
         try {
-            return shopperService.getOrdersBySid(sid);
+            return shopperService.getMyAllOrders(sid);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
+    @RequestMapping(value = "/{sid}/coupons", method = RequestMethod.GET)
+    public List<Coupon> getMyCoupons(@PathVariable int sid) {
+        try {
+            return shopperService.getMyCoupons(sid);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     @RequestMapping(value = "/{sid}/orders/businesses/{bid}", method = RequestMethod.GET)
     public List<Order> getOrdersWithShopperInBusiness(@PathVariable int sid, @PathVariable int bid) {
         try {
-            return shopperService.getOrdersBySidAndBid(sid, bid);
+            return shopperService.getMyOrdersWithBusiness(sid, bid);
         } catch (Exception e) {
             e.printStackTrace();
         }

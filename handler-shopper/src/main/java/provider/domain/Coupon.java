@@ -3,13 +3,14 @@ package provider.domain;
 import bigbang.e.AbstractCoupon;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * Created by Matt Xu on 2018/3/26
  */
 
 @Entity
-public class Coupon extends AbstractCoupon {
+public class Coupon extends AbstractCoupon implements Serializable {
     @Id
     @Column(name = "cid")
     private int cid;
@@ -25,15 +26,11 @@ public class Coupon extends AbstractCoupon {
     private int type;
 
     @Column
-    private float discout;
+    private float discount;
 
     @ManyToOne(fetch = FetchType.EAGER, targetEntity = Business.class)
     @JoinColumn(name = "bid")
     private Business business;
-
-    @ManyToOne(fetch = FetchType.EAGER, targetEntity = Shopper.class)
-    @JoinColumn(name = "sid")
-    private Shopper shopper;
 
     public int getBid() {
         return bid;
@@ -67,12 +64,12 @@ public class Coupon extends AbstractCoupon {
         this.type = type;
     }
 
-    public float getDiscout() {
-        return discout;
+    public float getDiscount() {
+        return discount;
     }
 
-    public void setDiscout(float discout) {
-        this.discout = discout;
+    public void setDiscount(float discount) {
+        this.discount = discount;
     }
 
     public Business getBusiness() {

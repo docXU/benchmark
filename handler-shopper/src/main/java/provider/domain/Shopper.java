@@ -29,10 +29,7 @@ public class Shopper extends AbstractShopper implements Serializable {
     @Column
     private String password;
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "shoppers", cascade = CascadeType.REFRESH)
-    private Set<Business> businesses = new HashSet<>();
-
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "shopper")
-    private Set<Coupon> coupons = new HashSet<>();
+    private Set<Business> businesses;
 
     public int getSid() {
         return sid;
@@ -90,11 +87,4 @@ public class Shopper extends AbstractShopper implements Serializable {
         this.businesses = businesses;
     }
 
-    public Set<Coupon> getCoupons() {
-        return coupons;
-    }
-
-    public void setCoupons(Set<Coupon> coupons) {
-        this.coupons = coupons;
-    }
 }

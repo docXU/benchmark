@@ -1,17 +1,25 @@
 package bigbang.i;
 
+import bigbang.e.AbstractCoupon;
 import bigbang.e.AbstractOrder;
 
 import java.util.List;
 
 public interface IOrderService<T> extends ICRUDService<T> {
-    List<? extends AbstractOrder> getOrdersBySid(int sid);
+    List<T> getOrdersBySid(int sid);
 
-    List<? extends AbstractOrder> getOrdersByBid(int bid);
+    List<T> getOrdersByBid(int bid);
 
-    List<? extends AbstractOrder> getOrdersBySidAndBid(int sid, int bid);
+    List<T> getOrdersBySidAndBid(int sid, int bid);
 
-    String placeOrder(AbstractOrder order);
+    String placeOrder(T order);
 
     int getStatus(int oid);
+
+    //TODO: 优惠券服务分离订单服务
+    AbstractCoupon createCoupon(AbstractCoupon coupon);
+
+    List<? extends AbstractCoupon> getCouponsBySid(int sid);
+
+    List<? extends AbstractCoupon> getCouponsByBid(int bid);
 }

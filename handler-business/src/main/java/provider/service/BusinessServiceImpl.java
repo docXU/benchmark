@@ -3,6 +3,7 @@ package provider.service;
 import bigbang.e.AbstractCoupon;
 import bigbang.e.AbstractShopper;
 import bigbang.i.IBusinessService;
+import bigbang.i.IOrderService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
@@ -13,6 +14,7 @@ import provider.domain.Coupon;
 import provider.domain.Shopper;
 import provider.repository.BusinessJpaRepository;
 
+import javax.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -22,7 +24,10 @@ public class BusinessServiceImpl implements IBusinessService<Business> {
     private static Logger logger = Logger.getLogger(BusinessServiceImpl.class);
 
     @Autowired
-    BusinessJpaRepository businessJpaRepository;
+    private BusinessJpaRepository businessJpaRepository;
+
+    @Resource
+    private IOrderService orderService;
 
     @Override
     public Shopper addVIP(String bid, AbstractShopper shopper) throws Exception {
@@ -57,7 +62,7 @@ public class BusinessServiceImpl implements IBusinessService<Business> {
                     .findFirst()
                     .get();
             //TODO:优惠券查询
-            vip.setCoupons(new HashSet<>(0));
+            //vip.setCoupons(new HashSet<>(0));
             return vip;
         } catch (Exception e) {
             throw new NullPointerException("不存在的顾客");
@@ -80,14 +85,19 @@ public class BusinessServiceImpl implements IBusinessService<Business> {
 
     @Override
     public Coupon createCoupon(AbstractCoupon coupon) {
-        Coupon prepareAdd = (Coupon) coupon;
-        Business business = businessJpaRepository.getOne(prepareAdd.getBid());
-        Set<Coupon> oldCouponSet = business.getCoupons();
-        oldCouponSet.add(prepareAdd);
-        business.setCoupons(oldCouponSet);
-        businessJpaRepository.save(business);
-        return (Coupon) coupon;
+        try {
+            return (Coupon) orderService.createCoupon((Coupon) coupon);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
+
+    @Override
+    public List<Coupon> getMyCoupons(int bid) {
+        return orderService.getCouponsByBid(bid);
+    }
+
 
     @Override
     public String deliverCoupon(String bid, String sid) {

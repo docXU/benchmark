@@ -5,12 +5,15 @@ import bigbang.i.IShopperService;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.web.bind.annotation.*;
 import provider.domain.Business;
+import provider.domain.Coupon;
 import provider.domain.Shopper;
 import provider.domain.View;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * Created by Matt Xu on 2018/3/26
@@ -39,6 +42,25 @@ public class BusinessRestfulPlay {
     @RequestMapping(value = "/{bid}", method = RequestMethod.PUT, consumes = "application/json")
     public Business updateBusiness(@RequestBody Business business) {
         return (Business) businessService.update(business);
+    }
+
+    @RequestMapping(value = "/{bid}/coupons", method = RequestMethod.POST)
+    public Coupon createCoupon(@PathVariable int bid, @RequestBody Coupon coupon) {
+        //TODO:同样的，设计一套ID生成类
+        //https://www.cnblogs.com/haoxinyue/p/5208136.html
+        //coupon.setCid(***);
+        coupon.setBid(bid);
+        try {
+            return (Coupon) businessService.createCoupon(coupon);
+        } catch (Exception e) {
+            //cid重复之类的异常
+            return null;
+        }
+    }
+
+    @RequestMapping(value = "/{bid}/coupons", method = RequestMethod.GET)
+    public List<Coupon> getAllCoupons(@PathVariable String bid) {
+        return businessService.getMyCoupons(Integer.parseInt(bid));
     }
 
     @RequestMapping(value = "/{bid}/shoppers", method = RequestMethod.GET)

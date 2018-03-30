@@ -1,6 +1,7 @@
 package bigbang.i;
 
 import bigbang.e.AbstractBusiness;
+import bigbang.e.AbstractCoupon;
 import bigbang.e.AbstractOrder;
 
 import java.util.List;
@@ -13,7 +14,9 @@ public interface IShopperService<S> extends ICRUDService<S> {
 
     String placeOrder(AbstractOrder order);
 
-    List<? extends AbstractOrder> getOrdersBySid(int sid);
+    List<? extends AbstractOrder> getMyAllOrders(int sid);
 
-    List<? extends AbstractOrder> getOrdersBySidAndBid(int sid, int bid);
+    List<? extends AbstractOrder> getMyOrdersWithBusiness(int sid, int bid);
+
+    List<? extends AbstractCoupon> getMyCoupons(int sid);
 }

@@ -1,9 +1,11 @@
 package provider.service;
 
-import bigbang.e.AbstractOrder;
+import bigbang.e.AbstractCoupon;
 import bigbang.i.IOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import provider.domain.Coupon;
 import provider.domain.Order;
+import provider.repository.CouponJpaRepository;
 import provider.repository.OrderJpaRepository;
 
 import java.util.List;
@@ -16,6 +18,9 @@ public class orderServiceImpl implements IOrderService<Order> {
 
     @Autowired
     private OrderJpaRepository orderJpaRepository;
+
+    @Autowired
+    private CouponJpaRepository couponJpaRepository;
 
     @Override
     public List<Order> getOrdersBySid(int sid) {
@@ -33,7 +38,7 @@ public class orderServiceImpl implements IOrderService<Order> {
     }
 
     @Override
-    public String placeOrder(AbstractOrder order) {
+    public String placeOrder(Order order) {
         try {
             create((Order) order);
             return "success";
@@ -52,6 +57,26 @@ public class orderServiceImpl implements IOrderService<Order> {
             e.printStackTrace();
             return -1;
         }
+    }
+
+    @Override
+    public Coupon createCoupon(AbstractCoupon coupon) {
+        try {
+            return couponJpaRepository.save((Coupon) coupon);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public List<Coupon> getCouponsBySid(int sid) {
+        return couponJpaRepository.findBySid(sid);
+    }
+
+    @Override
+    public List<Coupon> getCouponsByBid(int bid) {
+        return couponJpaRepository.findByBid(bid);
     }
 
     @Override
