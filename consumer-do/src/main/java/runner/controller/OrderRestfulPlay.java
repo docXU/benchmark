@@ -1,5 +1,6 @@
 package runner.controller;
 
+import bigbang.e.ErrorBody;
 import bigbang.i.IOrderService;
 import org.springframework.web.bind.annotation.*;
 import provider.domain.Order;
@@ -22,8 +23,8 @@ public class OrderRestfulPlay {
             return orderService.placeOrder(order);
         } catch (Exception e) {
             e.printStackTrace();
+            return new ErrorBody().setCode(500).setMessage("操作失败，请检查参数后重试").toString();
         }
-        return "failure";
     }
 
     @RequestMapping(value = "/{oid}/status", method = RequestMethod.GET)

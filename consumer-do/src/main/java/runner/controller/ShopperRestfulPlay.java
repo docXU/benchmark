@@ -1,5 +1,6 @@
 package runner.controller;
 
+import bigbang.e.ErrorBody;
 import bigbang.i.IBusinessService;
 import bigbang.i.IShopperService;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -48,8 +49,8 @@ public class ShopperRestfulPlay {
             return "success";
         } catch (Exception e) {
             e.printStackTrace();
+            return new ErrorBody().setCode(500).setMessage("操作失败，请检查参数后重试").toString();
         }
-        return "failure";
     }
 
     @RequestMapping(value = "/{sid}/businesses/{bid}", method = RequestMethod.GET)
@@ -64,8 +65,8 @@ public class ShopperRestfulPlay {
             return "success";
         } catch (Exception e) {
             e.printStackTrace();
+            return new ErrorBody().setCode(500).setMessage("操作失败，请检查参数后重试").toString();
         }
-        return "failure";
     }
 
     @RequestMapping(value = "/orders", method = RequestMethod.POST)
@@ -79,8 +80,8 @@ public class ShopperRestfulPlay {
             return shopperService.placeOrder(order);
         } catch (Exception e) {
             e.printStackTrace();
+            return new ErrorBody().setCode(500).setMessage("操作失败，请检查参数后重试").toString();
         }
-        return "failure";
     }
 
     @RequestMapping(value = "/{sid}/orders", method = RequestMethod.GET)
@@ -89,6 +90,7 @@ public class ShopperRestfulPlay {
             return shopperService.getMyAllOrders(sid);
         } catch (Exception e) {
             e.printStackTrace();
+            //return new ErrorBody().setCode(500).setMessage("操作失败，请检查参数后重试").toString();
         }
         return null;
     }
