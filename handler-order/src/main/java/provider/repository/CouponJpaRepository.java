@@ -11,9 +11,9 @@ import java.util.List;
  */
 
 public interface CouponJpaRepository extends JpaRepository<Coupon, Integer> {
-    @Query(value = "select * from coupon where sid = ?1", nativeQuery = true)
+    @Query(value = "from #{#entityName} where sid = ?1")
     List<Coupon> findBySid(int sid);
 
-    @Query(value = "select * from coupon where bid = ?1", nativeQuery = true)
+    @Query(value = "from #{#entityName} where bid = ?1")
     List<Coupon> findByBid(int bid);
 }

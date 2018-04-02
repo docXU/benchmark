@@ -11,12 +11,12 @@ import java.util.List;
  */
 
 public interface OrderJpaRepository extends JpaRepository<Order, Integer> {
-    @Query(value = "select * from tb_order where sid = ?1", nativeQuery = true)
+    @Query(value = "from #{#entityName} where sid = ?1")
     List<Order> findBySid(int sid);
 
-    @Query(value = "select * from tb_order where bid = ?1", nativeQuery = true)
+    @Query(value = "from #{#entityName} where bid = ?1")
     List<Order> findByBid(int bid);
 
-    @Query(value = "select * from tb_order where sid = ?1 and bid = ?2", nativeQuery = true)
+    @Query(value = "from #{#entityName} where sid = ?1 and bid = ?2")
     List<Order> findBySidAndBid(int sid, int bid);
 }
