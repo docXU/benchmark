@@ -1,6 +1,7 @@
 package provider.domain;
 
 import bigbang.e.AbstractCoupon;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import java.io.Serializable;
 
@@ -32,6 +33,7 @@ public class Coupon extends AbstractCoupon implements Serializable {
         this.bid = bid;
     }
 
+    @JsonView({View.BusinessView.class, View.ShopperView.class})
     public int getCid() {
         return cid;
     }
@@ -40,6 +42,7 @@ public class Coupon extends AbstractCoupon implements Serializable {
         this.cid = cid;
     }
 
+    @JsonView({View.BusinessView.class, View.ShopperView.class})
     public int getSid() {
         return sid;
     }
@@ -48,6 +51,7 @@ public class Coupon extends AbstractCoupon implements Serializable {
         this.sid = sid;
     }
 
+    @JsonView({View.BusinessView.class, View.ShopperView.class})
     public int getType() {
         return type;
     }
@@ -56,6 +60,7 @@ public class Coupon extends AbstractCoupon implements Serializable {
         this.type = type;
     }
 
+    @JsonView({View.BusinessView.class, View.ShopperView.class})
     public float getDiscount() {
         return discount;
     }

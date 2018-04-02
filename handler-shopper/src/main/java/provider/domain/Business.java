@@ -47,7 +47,7 @@ public class Business extends bigbang.e.AbstractBusiness implements Serializable
             @JoinColumn(name = "sid", referencedColumnName = "sid")})
     private Set<Shopper> shoppers = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "business", cascade = CascadeType.REFRESH)
+    @Transient
     private Set<Coupon> coupons = new HashSet<>();
 
     public Set<Coupon> getCoupons() {

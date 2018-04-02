@@ -13,6 +13,7 @@ import provider.domain.Shopper;
 import provider.repository.ShopperJpaRepository;
 
 import javax.annotation.Resource;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -71,7 +72,9 @@ public class ShopperServiceImpl implements IShopperService<Shopper> {
 
     @Override
     public Shopper query(String id) {
-        return shopperJpaRepository.findById(Integer.parseInt(id)).get();
+        Shopper shopper = shopperJpaRepository.findById(Integer.parseInt(id)).get();
+        shopper.setCoupons(new HashSet<Coupon>(orderService.getCouponsBySid(shopper.getSid())));
+        return shopper;
     }
 
     @Override

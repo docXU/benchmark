@@ -10,6 +10,7 @@ import java.util.Set;
 
 /**
  * Created by Matt Xu on 2018/3/22
+ * @author xuxiongwei
  */
 public class Business extends AbstractBusiness implements Serializable {
     private int bid;
@@ -25,23 +26,7 @@ public class Business extends AbstractBusiness implements Serializable {
     private Set<Shopper> shoppers;
     private Set<Coupon> coupons;
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Business:[bid= ").append(this.getBid())
-                .append(", shop_name=").append(this.getShop_name())
-                .append(", create_time=").append(this.getCreate_time())
-                .append(", coupons=[").append(this.getCoupons()).append("]")
-                .append(", Shoppers:[");
-        for (Shopper s :
-                shoppers) {
-            sb.append("Shopper:[sid= ").append(s.getSid())
-                    .append(", nickname=").append(s.getNickname()).append("],");
-        }
-        sb.append("]");
-        return sb.toString();
-    }
-
+    @JsonView(View.BusinessView.class)
     public Set<Coupon> getCoupons() {
         return coupons;
     }

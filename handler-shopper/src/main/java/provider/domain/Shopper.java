@@ -31,6 +31,9 @@ public class Shopper extends AbstractShopper implements Serializable {
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "shoppers", cascade = CascadeType.REFRESH)
     private Set<Business> businesses;
 
+    @Transient
+    private Set<Coupon> coupons;
+
     public int getSid() {
         return sid;
     }
@@ -87,4 +90,11 @@ public class Shopper extends AbstractShopper implements Serializable {
         this.businesses = businesses;
     }
 
+    public Set<Coupon> getCoupons() {
+        return coupons;
+    }
+
+    public void setCoupons(Set<Coupon> coupons) {
+        this.coupons = coupons;
+    }
 }

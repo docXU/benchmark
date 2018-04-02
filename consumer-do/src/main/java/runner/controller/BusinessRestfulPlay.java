@@ -35,8 +35,9 @@ public class BusinessRestfulPlay {
     }
 
     @RequestMapping(value = "/{bid}", method = RequestMethod.GET, consumes = "application/json")
-    public String getBusiness(@PathVariable String bid) {
-        return ((Business) businessService.query(bid)).toString();
+    @JsonView(View.BusinessView.class)
+    public Business getBusiness(@PathVariable String bid) {
+        return ((Business) businessService.query(bid));
     }
 
     @RequestMapping(value = "/{bid}", method = RequestMethod.PUT, consumes = "application/json")

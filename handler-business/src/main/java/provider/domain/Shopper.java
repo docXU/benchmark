@@ -9,6 +9,7 @@ import java.util.Set;
 
 /**
  * Created by Matt Xu on 2018/3/22
+ * @author xuxiongwei
  */
 
 @Entity
@@ -31,6 +32,9 @@ public class Shopper extends AbstractShopper implements Serializable, Cloneable 
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "shoppers", cascade = CascadeType.REFRESH)
     private Set<Business> businesses;
 
+    @Transient
+    private Set<Coupon> coupons;
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -52,9 +56,28 @@ public class Shopper extends AbstractShopper implements Serializable, Cloneable 
         try {
             clone = (Shopper) super.clone();
         } catch (CloneNotSupportedException e) {
-            throw new RuntimeException(e); // won't happen
+            // won't happen
+            throw new RuntimeException(e);
         }
         return clone;
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    public Set<Coupon> getCoupons() {
+        return coupons;
+    }
+
+    public void setCoupons(Set<Coupon> coupons) {
+        this.coupons = coupons;
     }
 
     public int getSid() {

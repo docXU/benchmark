@@ -6,7 +6,6 @@ import bigbang.i.IBusinessService;
 import bigbang.i.IOrderService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import provider.domain.Business;
@@ -19,7 +18,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
 public class BusinessServiceImpl implements IBusinessService<Business> {
     private static Logger logger = Logger.getLogger(BusinessServiceImpl.class);
 
@@ -30,11 +28,11 @@ public class BusinessServiceImpl implements IBusinessService<Business> {
     private IOrderService orderService;
 
     @Override
-    public Shopper addVIP(String bid, AbstractShopper shopper) throws Exception {
+    public Shopper addVIP(String bid, AbstractShopper shopper) {
         Shopper instance = (Shopper) shopper;
         Business bus = businessJpaRepository.findById(Integer.parseInt(bid)).get();
         if (!instance.getBusinesses().add(bus)) {
-            throw new Exception("用户已经是会员");
+            throw new RuntimeException("用户已经是会员");
         }
         bus.getShoppers().add(instance);
         bus.setLast_update_time(System.currentTimeMillis());
@@ -43,29 +41,30 @@ public class BusinessServiceImpl implements IBusinessService<Business> {
     }
 
     @Override
+    @Transactional
     public Set<Shopper> queryAllVIP(String bid) {
         try {
             Business business = businessJpaRepository.findById(Integer.parseInt(bid)).get();
             return business.getShoppers();
         } catch (Exception e) {
-            throw new NullPointerException("不存在商家");
+            throw new RuntimeException("不存在商家");
         }
     }
 
     @Override
     public Shopper queryVIPDetail(String bid, String sid) {
-        Set<Shopper> shoppers = queryAllVIP(bid);
-        Shopper vip;
         try {
-            vip = (Shopper) shoppers.stream()
+            Set<Shopper> shoppers = queryAllVIP(bid);
+            Shopper vip;
+            vip = shoppers.stream()
                     .filter(shopper -> Integer.parseInt(sid) == ((Shopper) shopper).getSid())
                     .findFirst()
                     .get();
             //TODO:优惠券查询
-            //vip.setCoupons(new HashSet<>(0));
+            vip.setCoupons(new HashSet<>(orderService.getCouponsBySid(vip.getSid())));
             return vip;
         } catch (Exception e) {
-            throw new NullPointerException("不存在的顾客");
+            throw new RuntimeException("不存在的顾客");
         }
     }
 
@@ -75,10 +74,10 @@ public class BusinessServiceImpl implements IBusinessService<Business> {
         try {
             Set<Shopper> vips = business.getShoppers();
             business.setShoppers(vips.stream()
-                    .filter(shopper -> Integer.parseInt(sid) != ((Shopper) shopper).getSid())
+                    .filter(shopper -> Integer.parseInt(sid) != shopper.getSid())
                     .collect(Collectors.toSet()));
         } catch (Exception e) {
-            throw new NullPointerException("取消失败");
+            throw new RuntimeException("不存在的vip");
         }
         return "取消成功";
     }
@@ -86,10 +85,10 @@ public class BusinessServiceImpl implements IBusinessService<Business> {
     @Override
     public Coupon createCoupon(AbstractCoupon coupon) {
         try {
-            return (Coupon) orderService.createCoupon((Coupon) coupon);
+            return (Coupon) orderService.createCoupon(coupon);
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            throw new RuntimeException("违法的参数列表");
         }
     }
 
@@ -98,9 +97,8 @@ public class BusinessServiceImpl implements IBusinessService<Business> {
         return orderService.getCouponsByBid(bid);
     }
 
-
     @Override
-    public String deliverCoupon(String bid, String sid) {
+    public String deliverCoupon(AbstractCoupon coupon) {
         return "deliver coupon fail";
     }
 
@@ -114,8 +112,9 @@ public class BusinessServiceImpl implements IBusinessService<Business> {
         Business business = null;
         if (0 == obj.getBid()) {
             int currentMaxID = businessJpaRepository.getBusinessMaxId();
-            if (currentMaxID == Integer.MAX_VALUE)
+            if (currentMaxID == Integer.MAX_VALUE) {
                 throw new RuntimeException("id值已经用完！");
+            }
             obj.setBid(++currentMaxID);
         }
         try {
@@ -131,9 +130,11 @@ public class BusinessServiceImpl implements IBusinessService<Business> {
     @Override
     public Business query(String id) {
         try {
-            return businessJpaRepository.findById(Integer.parseInt(id)).get();
+            Business business = businessJpaRepository.findById(Integer.parseInt(id)).get();
+            business.setCoupons(new HashSet(orderService.getCouponsByBid(business.getBid())));
+            return business;
         } catch (Exception e) {
-            throw new NullPointerException("商户不存在");
+            throw new RuntimeException("商户不存在");
         }
     }
 

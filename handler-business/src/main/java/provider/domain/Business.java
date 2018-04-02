@@ -48,6 +48,17 @@ public class Business extends bigbang.e.AbstractBusiness implements Serializable
             @JoinColumn(name = "sid", referencedColumnName = "sid")})
     private Set<Shopper> shoppers = new HashSet<>();
 
+    @Transient
+    private Set<Coupon> coupons;
+
+    public Set<Coupon> getCoupons() {
+        return coupons;
+    }
+
+    public void setCoupons(Set<Coupon> coupons) {
+        this.coupons = coupons;
+    }
+
     public Set<Shopper> getShoppers() {
         return shoppers;
     }

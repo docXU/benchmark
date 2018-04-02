@@ -9,28 +9,12 @@ import java.io.Serializable;
  * Created by Matt Xu on 2018/3/26
  */
 
-@Entity
 public class Coupon extends AbstractCoupon implements Serializable {
-    @Id
-    @Column(name = "cid")
     private int cid;
-
-    @Column(insertable = false, updatable = false)
     private int sid;
-
-    //约束business的coupon，使得coupon的插入更新只能通过business类操作
-    @Column(insertable = false, updatable = false)
     private int bid;
-
-    @Column
     private int type;
-
-    @Column
     private float discount;
-
-    @ManyToOne(fetch = FetchType.EAGER, targetEntity = Business.class)
-    @JoinColumn(name = "bid")
-    private Business business;
 
     public int getBid() {
         return bid;
@@ -70,13 +54,5 @@ public class Coupon extends AbstractCoupon implements Serializable {
 
     public void setDiscount(float discount) {
         this.discount = discount;
-    }
-
-    public Business getBusiness() {
-        return business;
-    }
-
-    public void setBusiness(Business business) {
-        this.business = business;
     }
 }
