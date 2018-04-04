@@ -8,10 +8,12 @@ import provider.domain.Order;
 import provider.repository.CouponJpaRepository;
 import provider.repository.OrderJpaRepository;
 
+import java.util.Date;
 import java.util.List;
 
 /**
  * Created by Matt Xu on 2018/3/29
+ * @author xuxiongwei
  */
 
 public class orderServiceImpl implements IOrderService<Order> {
@@ -35,6 +37,16 @@ public class orderServiceImpl implements IOrderService<Order> {
     @Override
     public List<Order> getOrdersBySidAndBid(int sid, int bid) {
         return orderJpaRepository.findBySidAndBid(sid, bid);
+    }
+
+    @Override
+    public List<Order> getOrdersBySidBetweenTime(int sid, Date startTime, Date endTime) {
+        return orderJpaRepository.findBySidBetweenTime(sid, startTime, endTime);
+    }
+
+    @Override
+    public List<Order> getOrdersByBidBetweenTime(int bid, Date startTime, Date endTime) {
+        return orderJpaRepository.findByBidBetweenTime(bid, startTime, endTime);
     }
 
     @Override

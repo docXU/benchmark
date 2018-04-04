@@ -9,10 +9,11 @@ import javax.annotation.Resource;
 
 /**
  * Created by Matt Xu on 2018/3/29
+ * @author xuxiongwei
  */
 
 @RestController
-@RequestMapping("/orders")
+@RequestMapping(value = "/orders")
 public class OrderRestfulPlay {
     @Resource
     IOrderService orderService;
@@ -36,5 +37,4 @@ public class OrderRestfulPlay {
     String updateOrder(@PathVariable Order order) {
         return String.valueOf(orderService.update(order));
     }
-
 }

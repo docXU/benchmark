@@ -7,6 +7,7 @@ import java.io.Serializable;
 
 /**
  * Created by Matt Xu on 2018/3/26
+ * @author xuxiongwei
  */
 
 @Entity
@@ -18,7 +19,6 @@ public class Coupon extends AbstractCoupon implements Serializable {
     @Column
     private int sid;
 
-    //约束business的coupon，使得coupon的插入更新只能通过business类操作
     @Column
     private int bid;
 

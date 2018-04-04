@@ -19,6 +19,7 @@ import java.util.Set;
 
 /**
  * Created by Matt Xu on 2018/3/27
+ * @author xuxiongwei
  */
 
 public class ShopperServiceImpl implements IShopperService<Shopper> {

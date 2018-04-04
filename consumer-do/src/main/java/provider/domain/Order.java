@@ -3,18 +3,21 @@ package provider.domain;
 import bigbang.e.AbstractOrder;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
  * Created by Matt Xu on 2018/3/29
+ * @author xuxiongwei
  */
 
 public class Order extends AbstractOrder implements Serializable {
     private int oid;
 
-    private int sid;
-
     private int bid;
+
+    private int sid;
 
     private Date create_time;
 

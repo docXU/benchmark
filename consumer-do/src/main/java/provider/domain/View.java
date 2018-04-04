@@ -13,4 +13,8 @@ public class View {
     //Business 隔离Shopper属性避免循环
     public interface BusinessView {
     }
+
+    //Order 隔离主键信息
+    public interface OrderView {
+    }
 }

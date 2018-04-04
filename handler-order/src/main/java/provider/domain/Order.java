@@ -2,15 +2,13 @@ package provider.domain;
 
 import bigbang.e.AbstractOrder;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by Matt Xu on 2018/3/29
+ * @author xuxiongwei
  */
 
 @Entity
@@ -45,6 +43,9 @@ public class Order extends AbstractOrder implements Serializable {
      */
     @Column
     private Integer cid;
+
+    @Transient
+    private Coupon coupon;
 
     public int getOid() {
         return oid;
@@ -102,7 +103,7 @@ public class Order extends AbstractOrder implements Serializable {
         this.status = status;
     }
 
-    public int isUse_coupons() {
+    public int getUse_coupons() {
         return use_coupons;
     }
 
@@ -116,5 +117,13 @@ public class Order extends AbstractOrder implements Serializable {
 
     public void setCid(Integer cid) {
         this.cid = cid;
+    }
+
+    public Coupon getCoupon() {
+        return coupon;
+    }
+
+    public void setCoupon(Coupon coupon) {
+        this.coupon = coupon;
     }
 }
