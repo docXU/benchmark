@@ -15,5 +15,5 @@
     <!--使用 dubbo 协议实现定义好的 api.PermissionService 接口-->
     <dubbo:service interface="bigbang.i.IOrderService" ref="orderServiceImpl" protocol="dubbo"
                    retries="0" timeout="6000" version="1.0.0"/>
-    <bean id="orderServiceImpl" class="provider.service.orderServiceImpl"/>
+    <bean id="orderServiceImpl" class="provider.service.OrderServiceImpl"/>
 </beans>

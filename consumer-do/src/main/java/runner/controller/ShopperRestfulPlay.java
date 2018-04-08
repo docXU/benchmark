@@ -4,8 +4,12 @@ import bigbang.e.ErrorBody;
 import bigbang.i.IBusinessService;
 import bigbang.i.IShopperService;
 import com.fasterxml.jackson.annotation.JsonView;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import provider.domain.*;
+import runner.util.RedisHandler;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -14,6 +18,7 @@ import java.util.Set;
 
 /**
  * Created by Matt Xu on 2018/3/28
+ * @author xuxiongwei
  */
 
 @RestController
@@ -23,6 +28,9 @@ public class ShopperRestfulPlay {
     private IShopperService shopperService;
     @Resource
     private IBusinessService businessService;
+
+    @Resource
+    RedisTemplate redisTemplate;
 
     @RequestMapping(value = "", method = RequestMethod.POST)
     @JsonView(View.ShopperView.class)
@@ -70,17 +78,17 @@ public class ShopperRestfulPlay {
     }
 
     @RequestMapping(value = "/orders", method = RequestMethod.POST)
-    public String placeOrder(@RequestBody Order order) {
+    public ResponseEntity placeOrder(@RequestBody Order order) {
         try {
-            //TODO: 疯转一个ID生成类，创建一个全局唯一ID
-            order.setOid(5);
-            order.setCreate_time(new Date(System.currentTimeMillis()));
+            order.setCreate_time(new Date());
             order.setLast_update_time((int) System.currentTimeMillis());
             order.setCid(null);
-            return shopperService.placeOrder(order);
+            Order res = (Order) shopperService.placeOrder(order);
+            RedisHandler.refreshRedisCache(redisTemplate, res);
+            return new ResponseEntity<>(res, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ErrorBody().setCode(500).setMessage("操作失败，请检查参数后重试").toString();
+            return new ResponseEntity("操作失败，请检查参数后重试", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

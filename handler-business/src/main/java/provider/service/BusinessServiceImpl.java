@@ -6,6 +6,8 @@ import bigbang.i.IBusinessService;
 import bigbang.i.IOrderService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import provider.domain.Business;
@@ -17,6 +19,9 @@ import javax.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * @author xuxiongwei
+ */
 @Service
 public class BusinessServiceImpl implements IBusinessService<Business> {
     private static Logger logger = Logger.getLogger(BusinessServiceImpl.class);
@@ -28,6 +33,7 @@ public class BusinessServiceImpl implements IBusinessService<Business> {
     private IOrderService orderService;
 
     @Override
+    @CacheEvict(value = "viplist", key = "'queryAllVIP' + #bid ")
     public Shopper addVIP(String bid, AbstractShopper shopper) {
         Shopper instance = (Shopper) shopper;
         Business bus = businessJpaRepository.findById(Integer.parseInt(bid)).get();
@@ -42,9 +48,13 @@ public class BusinessServiceImpl implements IBusinessService<Business> {
 
     @Override
     @Transactional
+    @Cacheable(value = "viplist", key = "'queryAllVIP' + #bid")
     public Set<Shopper> queryAllVIP(String bid) {
         try {
             Business business = businessJpaRepository.findById(Integer.parseInt(bid)).get();
+            for (Shopper shopper : business.getShoppers()) {
+                shopper.setCoupons(new HashSet<Coupon>(orderService.getCouponsBySid(shopper.getSid())));
+            }
             return business.getShoppers();
         } catch (Exception e) {
             throw new RuntimeException("不存在商家");
@@ -61,7 +71,7 @@ public class BusinessServiceImpl implements IBusinessService<Business> {
                     .findFirst()
                     .get();
             //TODO:优惠券查询
-            vip.setCoupons(new HashSet<>(orderService.getCouponsBySid(vip.getSid())));
+            vip.setCoupons(new HashSet<Coupon>(orderService.getCouponsBySid(vip.getSid())));
             return vip;
         } catch (Exception e) {
             throw new RuntimeException("不存在的顾客");
@@ -69,6 +79,7 @@ public class BusinessServiceImpl implements IBusinessService<Business> {
     }
 
     @Override
+    @CacheEvict(value = "viplist", key = "'queryAllVIP' + #bid ")
     public String deleteVIP(String bid, String sid) {
         Business business = query(bid);
         try {
@@ -126,7 +137,6 @@ public class BusinessServiceImpl implements IBusinessService<Business> {
         return business;
     }
 
-    //@Cacheable(value = "query_cache")
     @Override
     public Business query(String id) {
         try {

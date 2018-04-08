@@ -1,5 +1,6 @@
 package provider.domain;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 
@@ -17,7 +18,7 @@ public class TotalBody implements Serializable {
     private int allCount = 0;
     private Item[] itemList;
 
-    public TotalBody(int id, TotalType type, String which, List<Order> orders) {
+    public TotalBody(int id, TotalType type, String which, @NotNull List<Order> orders) {
         this.id = id;
         this.allCount = orders.size();
         this.type = type;
@@ -52,7 +53,6 @@ public class TotalBody implements Serializable {
 
     private void reduceOrderToItemList(Order order) {
         int title = 0;
-        System.out.println(order.getCreate_time());
         switch (this.type) {
             case ALL:
                 //title = order.getCreate_time().getYear();

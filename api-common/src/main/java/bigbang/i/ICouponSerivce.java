@@ -10,4 +10,6 @@ import java.util.List;
 
 public interface ICouponSerivce<T> extends ICRUDService<T> {
     List<T> findBySid(int sid);
+
+    int getMaxId();
 }

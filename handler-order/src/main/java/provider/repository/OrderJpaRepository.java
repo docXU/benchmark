@@ -10,6 +10,7 @@ import java.util.List;
 
 /**
  * Created by Matt Xu on 2018/3/29
+ * @author xuxiongwei
  */
 
 public interface OrderJpaRepository extends JpaRepository<Order, Integer> {
@@ -27,4 +28,7 @@ public interface OrderJpaRepository extends JpaRepository<Order, Integer> {
 
     @Query(value = "from #{#entityName} o where o.bid = :bid and o.create_time between :startDate and :endDate")
     List<Order> findByBidBetweenTime(@Param("bid") int bid, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
+
+    @Query(value = "select max(oid) from #{#entityName}")
+    int getMaxId();
 }

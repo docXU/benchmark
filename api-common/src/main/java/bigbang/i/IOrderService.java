@@ -17,7 +17,7 @@ public interface IOrderService<T> extends ICRUDService<T> {
 
     List<T> getOrdersByBidBetweenTime(int bid, Date startTime, Date endTime);
 
-    String placeOrder(T order);
+    T placeOrder(T order);
 
     int getStatus(int oid);
 
@@ -28,5 +28,5 @@ public interface IOrderService<T> extends ICRUDService<T> {
 
     List<? extends AbstractCoupon> getCouponsByBid(int bid);
 
-
+    int getMaxId();
 }

@@ -22,6 +22,11 @@ public class couponServiceImpl implements ICouponSerivce<Coupon> {
     }
 
     @Override
+    public int getMaxId() {
+        return couponJpaRepository.getMaxId();
+    }
+
+    @Override
     public Coupon create(Coupon obj) {
         return null;
     }

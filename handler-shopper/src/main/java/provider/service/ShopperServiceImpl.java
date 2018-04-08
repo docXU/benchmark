@@ -47,13 +47,18 @@ public class ShopperServiceImpl implements IShopperService<Shopper> {
     }
 
     @Override
-    public String placeOrder(AbstractOrder order) {
-        return orderService.placeOrder((Order) order);
+    public Order placeOrder(AbstractOrder order) {
+        return (Order) orderService.placeOrder((Order) order);
     }
 
     @Override
     public List<Coupon> getMyCoupons(int sid) {
         return orderService.getCouponsBySid(sid);
+    }
+
+    @Override
+    public int getMaxId() {
+        return shopperJpaRepository.getMaxId();
     }
 
     @Override
@@ -68,7 +73,13 @@ public class ShopperServiceImpl implements IShopperService<Shopper> {
 
     @Override
     public Shopper create(Shopper obj) {
-        return shopperJpaRepository.save(obj);
+        try {
+            obj.setSex(getMaxId() + 1);
+            return shopperJpaRepository.save(obj);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override

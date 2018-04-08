@@ -34,7 +34,7 @@ public class BusinessHandlerTest {
         int currentMaxId = iBusinessService.getBusinessMaxId();
         Business newOne = new Business();
         newOne.setShop_name("新测试用户");
-        newOne.setCreate_time(new Date(System.currentTimeMillis()));
+        newOne.setCreate_time(new Date());
         newOne.setTelephone("13049474755-1");
         newOne.setAddress("haven");
         newOne.setCity_code(0001);

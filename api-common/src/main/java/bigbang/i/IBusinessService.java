@@ -8,9 +8,11 @@ import java.util.Set;
 
 public interface IBusinessService<B> extends ICRUDService<B> {
 
-    AbstractShopper addVIP(String bid, AbstractShopper shopper) throws Exception;
+    AbstractShopper addVIP(String bid, AbstractShopper shopper) throws RuntimeException;
 
-    Set<? extends AbstractShopper> queryAllVIP(String bid);
+    Set<? extends AbstractShopper> queryAllVIP(String bid) throws RuntimeException;
+
+//    Set<? extends AbstractShopper> queryAllVIPByPage(String bid);
 
     AbstractShopper queryVIPDetail(String bid, String sid);
 
@@ -18,7 +20,7 @@ public interface IBusinessService<B> extends ICRUDService<B> {
 
     AbstractCoupon createCoupon(AbstractCoupon coupon);
 
-    String deliverCoupon(String bid, String sid);
+    String deliverCoupon(AbstractCoupon coupons);
 
     int getBusinessMaxId();
 

@@ -30,7 +30,7 @@ public class BusinessRestfulPlay {
     @RequestMapping(value = "", method = RequestMethod.POST)
     @ResponseBody
     public Business saveBusiness(@RequestBody Business business) {
-        business.setCreate_time(new Date(System.currentTimeMillis()));
+        business.setCreate_time(new Date());
         return (Business) businessService.create(business);
     }
 

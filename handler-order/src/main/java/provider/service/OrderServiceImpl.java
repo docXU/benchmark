@@ -16,7 +16,7 @@ import java.util.List;
  * @author xuxiongwei
  */
 
-public class orderServiceImpl implements IOrderService<Order> {
+public class OrderServiceImpl implements IOrderService<Order> {
 
     @Autowired
     private OrderJpaRepository orderJpaRepository;
@@ -50,13 +50,13 @@ public class orderServiceImpl implements IOrderService<Order> {
     }
 
     @Override
-    public String placeOrder(Order order) {
+    public Order placeOrder(Order order) {
         try {
-            create((Order) order);
-            return "success";
+            order.setOid(getMaxId() + 1);
+            return create(order);
         } catch (Exception e) {
             e.printStackTrace();
-            return "false";
+            return null;
         }
     }
 
@@ -74,8 +74,11 @@ public class orderServiceImpl implements IOrderService<Order> {
     @Override
     public Coupon createCoupon(AbstractCoupon coupon) {
         try {
-            return couponJpaRepository.save((Coupon) coupon);
+            Coupon ins = (Coupon) coupon;
+            ins.setCid(couponJpaRepository.getMaxId() + 1);
+            return couponJpaRepository.save(ins);
         } catch (Exception e) {
+            //抛出id用完等异常
             e.printStackTrace();
             return null;
         }
@@ -89,6 +92,12 @@ public class orderServiceImpl implements IOrderService<Order> {
     @Override
     public List<Coupon> getCouponsByBid(int bid) {
         return couponJpaRepository.findByBid(bid);
+    }
+
+    @Override
+    public int getMaxId() {
+        System.out.println(orderJpaRepository.getMaxId());
+        return orderJpaRepository.getMaxId();
     }
 
     @Override

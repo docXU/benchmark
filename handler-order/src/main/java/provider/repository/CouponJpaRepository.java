@@ -8,6 +8,7 @@ import java.util.List;
 
 /**
  * Created by Matt Xu on 2018/3/30
+ * @author xuxiongwei
  */
 
 public interface CouponJpaRepository extends JpaRepository<Coupon, Integer> {
@@ -16,4 +17,7 @@ public interface CouponJpaRepository extends JpaRepository<Coupon, Integer> {
 
     @Query(value = "from #{#entityName} where bid = ?1")
     List<Coupon> findByBid(int bid);
+
+    @Query(" select max(cid) from #{#entityName} ")
+    int getMaxId();
 }

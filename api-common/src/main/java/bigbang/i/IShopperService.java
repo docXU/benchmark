@@ -12,11 +12,13 @@ public interface IShopperService<S> extends ICRUDService<S> {
 
     boolean verifyVIP(String sid, String bid);
 
-    String placeOrder(AbstractOrder order);
+    AbstractOrder placeOrder(AbstractOrder order);
 
-    List<? extends AbstractOrder> getMyAllOrders(int sid);
+    List<? extends AbstractOrder> getMyAllOrders(int sid) throws Exception;
 
     List<? extends AbstractOrder> getMyOrdersWithBusiness(int sid, int bid);
 
     List<? extends AbstractCoupon> getMyCoupons(int sid);
+
+    int getMaxId();
 }
