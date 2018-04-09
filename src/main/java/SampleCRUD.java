@@ -1,5 +1,7 @@
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -9,11 +11,16 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.dbutils.*;
 import org.apache.commons.dbcp.BasicDataSource;
 
+/**
+ * @author xuxiongwei
+ */
 public class SampleCRUD implements Runnable {
-
-    private final static int StepSize = 20000; //使用固定步长避免id冲突
-    private final static int threadNums = 100;
-    private static int alreadyDoneRecord = 122000000;
+    /**
+     * 使用固定步长避免id冲突
+     */
+    private final static int STEP_SIZE = 20000;
+    private final static int THREAD_NUM = 100;
+    private static int alreadyDoneRecord = 6380010;
 
     private int start_id;
 
@@ -22,21 +29,18 @@ public class SampleCRUD implements Runnable {
     }
 
     private static void startInsert() throws InterruptedException {
-        long startTime = System.currentTimeMillis();
-        ArrayBlockingQueue<Runnable> workQueue = new ArrayBlockingQueue<Runnable>(10);
-        ThreadPoolExecutor pool = new ThreadPoolExecutor(100, 500, 1, TimeUnit.MINUTES, workQueue);
-        for (int i = 0; i < threadNums; i++) {
-            SampleCRUD thread = new SampleCRUD(i * SampleCRUD.StepSize);
+
+        ArrayBlockingQueue<Runnable> workQueue = new ArrayBlockingQueue<Runnable>(50);
+        ThreadPoolExecutor pool = new ThreadPoolExecutor(50, 101, 1, TimeUnit.MINUTES, workQueue);
+        for (int i = 0; i < THREAD_NUM; i++) {
+            SampleCRUD thread = new SampleCRUD(alreadyDoneRecord + i * SampleCRUD.STEP_SIZE);
             pool.execute(thread);
         }
         pool.shutdown();
-        while (true) {
-            if (pool.isTerminated()) {
-                break;
-            }
+        while (!pool.isTerminated()) {
             Thread.sleep(100);
         }
-        System.out.println("insert " + (alreadyDoneRecord + StepSize * threadNums) + " ~ " + (alreadyDoneRecord + 2 * StepSize * threadNums) + "(不含)  | " + StepSize + " BatchSize " + " 用时 " + (System.currentTimeMillis() - startTime) + "(ms)");
+
     }
 
     public void run() {
@@ -47,37 +51,46 @@ public class SampleCRUD implements Runnable {
             dataSource.setUsername("someoneCool");
             dataSource.setPassword("123456");
 
-            StringBuilder sb = new StringBuilder("insert into ibox_trainee.shopper values ");
-            for (int i = 0; i < StepSize; i++) {
-                sb.append("(").append(alreadyDoneRecord + start_id + i).append(", '")
-                        .append(UUID.randomUUID().toString().replace("-", "")).append("', '")
-                        .append(("" + System.currentTimeMillis()).substring(6))
-                        .append(new Random().nextInt(10000)).append("', ")
-                        .append("'0', ")
-                        .append("'1304924151@qq.com', ")
-                        .append("'123456'),");
+            StringBuilder sb = new StringBuilder("insert into ibox_trainee.business values ");
+            Random random = new Random();
+            SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            for (int i = 0; i < STEP_SIZE; i++) {
+                sb.append("(").append(start_id + i).append(", '")
+                        .append(UUID.randomUUID().toString()).append("', ")
+                        .append("'深圳" + random.nextInt(10000) + "', ")
+                        .append("'13049474755'").append(", ")
+                        .append("0, ")
+                        .append("null, ")
+                        .append("'" + sd.format(new Date()) + "', ")
+                        .append("0, ")
+                        .append("101),");
             }
-
+            long startTime = System.currentTimeMillis();
             new QueryRunner(dataSource).insert(sb.substring(0, sb.length() - 1) + ";", new ResultSetHandler<Object[]>() {
                 public Object[] handle(ResultSet rs) {
                     return null;
                 }
             });
+            synchronized (SampleCRUD.class) {
+                alreadyDoneRecord += STEP_SIZE;
+            }
+            System.out.println("insert " + (start_id) + " ~ " + (start_id + STEP_SIZE) + "(不含)  | " + STEP_SIZE + " BatchSize " + " 用时 " + (System.currentTimeMillis() - startTime) + "(ms)");
         } catch (SQLException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         try {
             long startTime = System.currentTimeMillis();
-            int times = 10;
-            int stepPerLoop = SampleCRUD.StepSize * SampleCRUD.threadNums;
+            int times = 1;
+            int stepPerLoop = SampleCRUD.STEP_SIZE * SampleCRUD.THREAD_NUM;
             int index = 0;
-            while (index <= times) {
+            while (index < times) {
                 index++;
                 SampleCRUD.startInsert();
-                SampleCRUD.alreadyDoneRecord += stepPerLoop;
             }
             System.out.println("总共插入 " + stepPerLoop * times + " 用时 " + (System.currentTimeMillis() - startTime) + "(ms)");
         } catch (InterruptedException e) {
