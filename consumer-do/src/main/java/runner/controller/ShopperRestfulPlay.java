@@ -103,20 +103,21 @@ public class ShopperRestfulPlay {
         return null;
     }
 
-    @RequestMapping(value = "/{sid}/coupons", method = RequestMethod.GET)
-    public List<Coupon> getMyCoupons(@PathVariable int sid) {
+    @RequestMapping(value = "/{sid}/orders/businesses/{bid}", method = RequestMethod.GET)
+    public List<Order> getOrdersWithShopperInBusiness(@PathVariable int sid, @PathVariable int bid) {
         try {
-            return shopperService.getMyCoupons(sid);
+            return shopperService.getMyOrdersWithBusiness(sid, bid);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    @RequestMapping(value = "/{sid}/orders/businesses/{bid}", method = RequestMethod.GET)
-    public List<Order> getOrdersWithShopperInBusiness(@PathVariable int sid, @PathVariable int bid) {
+
+    @RequestMapping(value = "/{sid}/coupons", method = RequestMethod.GET)
+    public List<Coupon> getMyCoupons(@PathVariable int sid) {
         try {
-            return shopperService.getMyOrdersWithBusiness(sid, bid);
+            return shopperService.getMyCoupons(sid);
         } catch (Exception e) {
             e.printStackTrace();
         }

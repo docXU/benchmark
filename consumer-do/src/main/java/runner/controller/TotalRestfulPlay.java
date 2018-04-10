@@ -32,11 +32,14 @@ public class TotalRestfulPlay {
 
     @RequestMapping(value = "/shoppers/{sid}/years/{year}", method = RequestMethod.GET)
     TotalBody getShopperTotalInYear(@PathVariable int sid, @PathVariable("year") String year) {
-        return new TotalBody(sid, TotalBody.TotalType.YEAR, year, Objects.requireNonNull(getAndCacheOrderInYear("Shopper", sid, year)));
+        return new TotalBody(sid, TotalBody.TotalType.YEAR, year,
+                Objects.requireNonNull(getAndCacheOrderInYear("Shopper", sid, year)));
     }
 
     @RequestMapping(value = "/shoppers/{sid}/years/{year}/mouths/{mouth}", method = RequestMethod.GET)
-    TotalBody getShopperTotalInMouth(@PathVariable int sid, @PathVariable("year") String year, @PathVariable("mouth") String mouth) {
+    TotalBody getShopperTotalInMouth(@PathVariable int sid,
+                                     @PathVariable("year") String year,
+                                     @PathVariable("mouth") String mouth) {
         List<Order> yearList = getAndCacheOrderInYear("Shopper", sid, year);
         try {
             //过滤出指定月的数据(getMonth 有坑)
@@ -48,27 +51,35 @@ public class TotalRestfulPlay {
             e.printStackTrace();
             return null;
         }
-
     }
 
     @RequestMapping(value = "/shoppers/{sid}/years/{year}/mouths/{mouth}/days/{day}", method = RequestMethod.GET)
-    TotalBody getShopperTotalInDay(@PathVariable int sid, @PathVariable("year") String year, @PathVariable("mouth") String mouth, @PathVariable("day") String day) {
+    TotalBody getShopperTotalInDay(@PathVariable int sid,
+                                   @PathVariable("year") String year,
+                                   @PathVariable("mouth") String mouth,
+                                   @PathVariable("day") String day) {
         List<Order> yearList = getAndCacheOrderInYear("Shopper", sid, year);
         //过滤出指定日的数据
-        List<Order> data = yearList.stream().filter(order -> order.getCreate_time().getMonth() + 1 == Integer.parseInt(mouth) && order.getCreate_time().getDate() == Integer.parseInt(day)).collect(Collectors.toList());
+        List<Order> data = yearList.stream()
+                .filter(order -> order.getCreate_time().getMonth() + 1 == Integer.parseInt(mouth)
+                        && order.getCreate_time().getDate() == Integer.parseInt(day))
+                .collect(Collectors.toList());
         return new TotalBody(sid, TotalBody.TotalType.DAY, year + "-" + mouth + "-" + day, data);
     }
 
     @RequestMapping(value = "/businesses/{bid}/years/{year}", method = RequestMethod.GET)
-    TotalBody getBusinessTotalInYear(@PathVariable int bid, @PathVariable("year") String year) {
+    TotalBody getBusinessTotalInYear(@PathVariable int bid,
+                                     @PathVariable("year") String year) {
         return new TotalBody(bid, TotalBody.TotalType.YEAR, year, Objects.requireNonNull(getAndCacheOrderInYear("Businesses", bid, year)));
     }
 
     @RequestMapping(value = "/businesses/{bid}/years/{year}/mouths/{mouth}", method = RequestMethod.GET)
-    TotalBody getBusinessTotalInMouth(@PathVariable int bid, @PathVariable("year") String year, @PathVariable("mouth") String mouth) {
+    TotalBody getBusinessTotalInMouth(@PathVariable int bid,
+                                      @PathVariable("year") String year,
+                                      @PathVariable("mouth") String mouth) {
         List<Order> yearList = getAndCacheOrderInYear("Business", bid, year);
         try {
-            //过滤出指定月的数据(getMonth 有坑)
+            //过滤出指定月的数据(getMonth 有坑 0-base)
             List<Order> data = yearList.stream()
                     .filter(order -> Integer.parseInt(mouth) == order.getCreate_time().getMonth() + 1)
                     .collect(Collectors.toList());
@@ -80,8 +91,11 @@ public class TotalRestfulPlay {
     }
 
     @RequestMapping(value = "/businesses/{bid}/years/{year}/mouths/{mouth}/days/{day}", method = RequestMethod.GET)
-    TotalBody getBusinessTotalInDay(@PathVariable int bid, @PathVariable("year") String year, @PathVariable("mouth") String mouth, @PathVariable("day") String day) {
-        List<Order> yearList = getAndCacheOrderInYear("Businesses", bid, year);
+    TotalBody getBusinessTotalInDay(@PathVariable int bid,
+                                    @PathVariable("year") String year,
+                                    @PathVariable("mouth") String mouth,
+                                    @PathVariable("day") String day) {
+        List<Order> yearList = getAndCacheOrderInYear("Business", bid, year);
 
         try {
             //过滤出指定日的数据
@@ -111,7 +125,8 @@ public class TotalRestfulPlay {
                             sd.parse(year + "-12-31 23:59:59"));
                 }
                 //设置1天后过期的缓存
-                redisTemplate.opsForValue().set("get" + who + "TotalInYear" + id + "year" + year, yearList, 1, TimeUnit.HOURS);
+                redisTemplate.opsForValue().set(who + "TotalInYear" + id + "year" + year,
+                        yearList, 1, TimeUnit.HOURS);
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;

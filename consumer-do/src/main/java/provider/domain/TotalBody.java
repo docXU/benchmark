@@ -15,7 +15,7 @@ public class TotalBody implements Serializable {
     private TotalType type;
     private String which;
     private float allSummary = .0f;
-    private int allCount = 0;
+    private int allCount;
     private Item[] itemList;
 
     public TotalBody(int id, TotalType type, String which, @NotNull List<Order> orders) {
@@ -58,13 +58,16 @@ public class TotalBody implements Serializable {
                 //title = order.getCreate_time().getYear();
                 break;
             case YEAR:
+                //1月开始
                 title = order.getCreate_time().getMonth() + 1;
                 break;
             case MOUTH:
+                //1号开始
                 title = order.getCreate_time().getDate();
                 break;
             case DAY:
-                title = order.getCreate_time().getHours();
+                //0点开始
+                title = order.getCreate_time().getHours() + 1;
                 break;
             default:
                 break;
@@ -72,7 +75,11 @@ public class TotalBody implements Serializable {
         Item item = itemList[title - 1];
         if (item == null) {
             item = new Item();
-            item.title = title;
+            if (this.type == TotalType.DAY) {
+                item.title = title - 1;
+            } else {
+                item.title = title;
+            }
             itemList[title - 1] = item;
         }
 
