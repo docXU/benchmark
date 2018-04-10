@@ -41,10 +41,11 @@ public class TotalRestfulPlay {
                                      @PathVariable("year") String year,
                                      @PathVariable("mouth") String mouth) {
         List<Order> yearList = getAndCacheOrderInYear("Shopper", sid, year);
+        final int need_mouth = Integer.parseInt(mouth);
         try {
             //过滤出指定月的数据(getMonth 有坑)
             List<Order> data = yearList.stream()
-                    .filter(order -> order.getCreate_time().getMonth() + 1 == Integer.parseInt(mouth))
+                    .filter(order -> order.getCreate_time().getMonth() + 1 == need_mouth)
                     .collect(Collectors.toList());
             return new TotalBody(sid, TotalBody.TotalType.MOUTH, year + "-" + mouth, data);
         } catch (Exception e) {
@@ -59,12 +60,21 @@ public class TotalRestfulPlay {
                                    @PathVariable("mouth") String mouth,
                                    @PathVariable("day") String day) {
         List<Order> yearList = getAndCacheOrderInYear("Shopper", sid, year);
+
         //过滤出指定日的数据
-        List<Order> data = yearList.stream()
-                .filter(order -> order.getCreate_time().getMonth() + 1 == Integer.parseInt(mouth)
-                        && order.getCreate_time().getDate() == Integer.parseInt(day))
-                .collect(Collectors.toList());
-        return new TotalBody(sid, TotalBody.TotalType.DAY, year + "-" + mouth + "-" + day, data);
+        final int need_mouth = Integer.parseInt(mouth);
+        final int need_day = Integer.parseInt(day);
+        try {
+            List<Order> data = yearList.stream()
+                    .filter(order -> order.getCreate_time().getMonth() + 1 == need_mouth
+                            && order.getCreate_time().getDate() == need_day)
+                    .collect(Collectors.toList());
+            return new TotalBody(sid, TotalBody.TotalType.DAY, year + "-" + mouth + "-" + day, data);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
     }
 
     @RequestMapping(value = "/businesses/{bid}/years/{year}", method = RequestMethod.GET)
@@ -78,10 +88,12 @@ public class TotalRestfulPlay {
                                       @PathVariable("year") String year,
                                       @PathVariable("mouth") String mouth) {
         List<Order> yearList = getAndCacheOrderInYear("Business", bid, year);
+
         try {
             //过滤出指定月的数据(getMonth 有坑 0-base)
+            final int need_mouth = Integer.parseInt(mouth);
             List<Order> data = yearList.stream()
-                    .filter(order -> Integer.parseInt(mouth) == order.getCreate_time().getMonth() + 1)
+                    .filter(order -> need_mouth == order.getCreate_time().getMonth() + 1)
                     .collect(Collectors.toList());
             return new TotalBody(bid, TotalBody.TotalType.MOUTH, year + "-" + mouth, data);
         } catch (Exception e) {
@@ -99,9 +111,11 @@ public class TotalRestfulPlay {
 
         try {
             //过滤出指定日的数据
+            final int need_mouth = Integer.parseInt(mouth);
+            final int need_day = Integer.parseInt(day);
             List<Order> data = yearList.stream()
-                    .filter(order -> order.getCreate_time().getMonth() + 1 == Integer.parseInt(mouth)
-                            && order.getCreate_time().getDate() == Integer.parseInt(day))
+                    .filter(order -> order.getCreate_time().getMonth() + 1 == need_mouth
+                            && order.getCreate_time().getDate() == need_day)
                     .collect(Collectors.toList());
             return new TotalBody(bid, TotalBody.TotalType.DAY, year + "-" + mouth + "-" + day, data);
         } catch (Exception e) {

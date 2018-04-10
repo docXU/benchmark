@@ -83,7 +83,6 @@ public class TotalBody implements Serializable {
             itemList[title - 1] = item;
         }
 
-        //TODO:原子性
         item.summary += order.getCost();
         item.count++;
     }
