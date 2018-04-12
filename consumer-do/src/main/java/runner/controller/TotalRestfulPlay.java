@@ -33,7 +33,7 @@ public class TotalRestfulPlay {
     @RequestMapping(value = "/shoppers/{sid}/years/{year}", method = RequestMethod.GET)
     TotalBody getShopperTotalInYear(@PathVariable int sid, @PathVariable("year") String year) {
         return new TotalBody(sid, TotalBody.TotalType.YEAR, year,
-                Objects.requireNonNull(getAndCacheOrderInYear("Shopper", sid, year)));
+                getAndCacheOrderInYear("Shopper", sid, year));
     }
 
     @RequestMapping(value = "/shoppers/{sid}/years/{year}/mouths/{mouth}", method = RequestMethod.GET)
@@ -80,7 +80,10 @@ public class TotalRestfulPlay {
     @RequestMapping(value = "/businesses/{bid}/years/{year}", method = RequestMethod.GET)
     TotalBody getBusinessTotalInYear(@PathVariable int bid,
                                      @PathVariable("year") String year) {
-        return new TotalBody(bid, TotalBody.TotalType.YEAR, year, Objects.requireNonNull(getAndCacheOrderInYear("Businesses", bid, year)));
+        return new TotalBody(bid,
+                TotalBody.TotalType.YEAR,
+                year,
+                getAndCacheOrderInYear("Businesses", bid, year));
     }
 
     @RequestMapping(value = "/businesses/{bid}/years/{year}/mouths/{mouth}", method = RequestMethod.GET)
@@ -125,7 +128,9 @@ public class TotalRestfulPlay {
     }
 
     private List<Order> getAndCacheOrderInYear(String who, int id, String year) {
-        List<Order> yearList = redisTemplate.opsForValue().get("get" + who + "TotalInYear" + id + "year" + year);
+        String keyFormat = who + "TotalInYear" + id + "year" + year;
+
+        List<Order> yearList = redisTemplate.opsForValue().get(keyFormat);
         SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         if (yearList == null) {
             try {
@@ -139,8 +144,7 @@ public class TotalRestfulPlay {
                             sd.parse(year + "-12-31 23:59:59"));
                 }
                 //设置1天后过期的缓存
-                redisTemplate.opsForValue().set(who + "TotalInYear" + id + "year" + year,
-                        yearList, 1, TimeUnit.HOURS);
+                redisTemplate.opsForValue().set(keyFormat, yearList, 1, TimeUnit.HOURS);
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;

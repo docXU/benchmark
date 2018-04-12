@@ -8,6 +8,12 @@
 
     <modelVersion>4.0.0</modelVersion>
     <url>http://maven.apache.org</url>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+    </dependencies>
 
     <parent>
         <groupId>ibox.bigbang</groupId>

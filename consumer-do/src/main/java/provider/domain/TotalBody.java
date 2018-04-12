@@ -18,9 +18,8 @@ public class TotalBody implements Serializable {
     private int allCount;
     private Item[] itemList;
 
-    public TotalBody(int id, TotalType type, String which, @NotNull List<Order> orders) {
+    public TotalBody(int id, TotalType type, String which, List<Order> orders) {
         this.id = id;
-        this.allCount = orders.size();
         this.type = type;
         this.which = which;
         switch (type) {
@@ -39,11 +38,13 @@ public class TotalBody implements Serializable {
             default:
                 itemList = null;
         }
-        for (Order order : orders) {
-            allSummary += order.getCost();
-            reduceOrderToItemList(order);
+        if (orders != null) {
+            this.allCount = orders.size();
+            for (Order order : orders) {
+                allSummary += order.getCost();
+                reduceOrderToItemList(order);
+            }
         }
-
     }
 
     @Override
